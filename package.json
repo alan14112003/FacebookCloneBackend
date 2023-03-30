@@ -1,0 +1,25 @@
+{
+  "name": "facebook_clone",
+  "version": "1.0.0",
+  "description": "Clone các chức năng cơ bản trong facebook",
+  "main": "src/server.js",
+  "scripts": {
+    "build": "babel src -d dist",
+    "dev": "nodemon --exec babel-node src/server.js"
+  },
+  "keywords": [],
+  "author": "Alan",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.0.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.21.0",
+    "@babel/core": "^7.21.3",
+    "@babel/node": "^7.20.7",
+    "@babel/preset-env": "^7.20.2",
+    "dotenv": "^16.0.3",
+    "nodemon": "^2.0.22"
+  }
+}
