@@ -12,7 +12,7 @@ const connections = {
       })
       console.log(`connected ${connect.connection.host}`)
     } catch (e) {
-      console.error(`Error: ${error.message}`)
+      console.error(`Error: ${e}`)
       process.exit()
     }
   },
