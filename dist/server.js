@@ -40,7 +40,7 @@ app.use(function (err, req, res, next) {
   return res.status(status).json({
     status: false,
     body: null,
-    message: error.message
+    message: err.message
   });
 });
 
