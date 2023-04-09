@@ -35,7 +35,7 @@ app.use('/', _routes["default"]);
 
 // middleware bắt lỗi
 app.use(function (err, req, res, next) {
-  var error = app.get('env') === 'development' ? err : {};
+  // const error = app.get('env') === 'development' ? err : {}
   var status = err.status || 500;
   return res.status(status).json({
     status: false,
