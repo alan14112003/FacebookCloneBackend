@@ -11,12 +11,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 _dotenv["default"].config();
 var _process$env = process.env,
   GOOGLE_CLIENT_ID = _process$env.GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET = _process$env.GOOGLE_CLIENT_SECRET;
+  GOOGLE_CLIENT_SECRET = _process$env.GOOGLE_CLIENT_SECRET,
+  GOOGLE_CLIENT_CALLBACK = _process$env.GOOGLE_CLIENT_CALLBACK,
+  URL = _process$env.URL;
 var GoogleStrategy = _passportGoogleOauth["default"].Strategy;
 _passport["default"].use(new GoogleStrategy({
   clientID: GOOGLE_CLIENT_ID,
   clientSecret: GOOGLE_CLIENT_SECRET,
-  callbackURL: '/v1/auth/callback/google',
+  callbackURL: "".concat(URL).concat(GOOGLE_CLIENT_CALLBACK),
   passReqToCallback: true
 }, function (request, accessToken, refreshToken, profile, done) {
   return done(null, {
