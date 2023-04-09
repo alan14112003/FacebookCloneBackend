@@ -1,29 +1,37 @@
 import mongoose from 'mongoose'
 
 import SoftDelete from '../../config/SoftDelete'
-import UserGenderEnum from '../Enums/Users/UserGenderEnum'
-import UserRoleEnum from '../Enums/Users/UserRoleEnum'
-import UserStatusEnum from '../Enums/Users/UserStatusEnum'
+import userGenderEnum from '../Enums/Users/UserGenderEnum'
+import userRoleEnum from '../Enums/Users/UserRoleEnum'
+import userStatusEnum from '../Enums/Users/UserStatusEnum'
 
 const userSchema = new mongoose.Schema(
   {
-    first_name: String,
-    last_name: String,
+    first_name: {
+      type: String,
+      lowercase: true,
+    },
+    last_name: {
+      type: String,
+      lowercase: true,
+    },
     birthdate: Date,
+    password: String,
     gender: {
       type: Number,
-      enum: Object.keys(UserGenderEnum.allName()).map((k) => Number(k)),
-      default: UserGenderEnum.SECRET,
+      enum: Object.keys(userGenderEnum.allName()).map((k) => Number(k)),
+      default: userGenderEnum.SECRET,
     },
     email: {
       type: String,
       require: true,
       unique: true,
+      lowercase: true,
     },
     role: {
       type: Number,
-      enum: Object.keys(UserRoleEnum.allName()).map((k) => Number(k)),
-      default: UserRoleEnum.USER,
+      enum: Object.keys(userRoleEnum.allName()).map((k) => Number(k)),
+      default: userRoleEnum.USER,
     },
     hobbies: [
       {
@@ -31,12 +39,16 @@ const userSchema = new mongoose.Schema(
         ref: 'Hobby',
       },
     ],
-    avatar: String,
+    avatar: {
+      type: String,
+      default:
+        'https://ik.imagekit.io/alan/images/facebook_clone/143086968_2856368904622192_1959732218791162458_n.png?updatedAt=1680950589015',
+    },
     cover_image: String,
     status: {
       type: Number,
-      enum: Object.keys(UserStatusEnum.allName()).map((k) => Number(k)),
-      default: UserStatusEnum.UNCONFIRMED,
+      enum: Object.keys(userStatusEnum.allName()).map((k) => Number(k)),
+      default: userStatusEnum.UNCONFIRMED,
     },
   },
   {
