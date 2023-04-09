@@ -4,7 +4,7 @@ import path from 'path'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 
-import connections from './config/database'
+import connections from './config/Database'
 import routes from './routes'
 import corsOptions from './config/Cors'
 

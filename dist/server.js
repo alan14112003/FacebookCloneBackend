@@ -5,7 +5,7 @@ var _dotenv = _interopRequireDefault(require("dotenv"));
 var _path = _interopRequireDefault(require("path"));
 var _bodyParser = _interopRequireDefault(require("body-parser"));
 var _cors = _interopRequireDefault(require("cors"));
-var _database = _interopRequireDefault(require("./config/database"));
+var _Database = _interopRequireDefault(require("./config/Database"));
 var _routes = _interopRequireDefault(require("./routes"));
 var _Cors = _interopRequireDefault(require("./config/Cors"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -13,7 +13,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 _dotenv["default"].config();
 
 // kết nối tới DB của mongo
-_database["default"].MongoDB();
+_Database["default"].MongoDB();
 
 // tạo app là đường dẫn gốc trong thư mục
 var app = (0, _express["default"])();
