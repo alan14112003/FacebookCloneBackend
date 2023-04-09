@@ -21,7 +21,7 @@ const app = express()
 app.use(express.static(path.join(__dirname, 'public')))
 
 // sử dụng cors để kiểm tra origin
-app.use(cors(corsOptions))
+app.use(cors())
 
 // sử dụng body-parser để parse body
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -32,7 +32,6 @@ app.use('/', routes)
 
 // middleware bắt lỗi
 app.use((err, req, res, next) => {
-  // const error = app.get('env') === 'development' ? err : {}
   const status = err.status || 500
 
   return res.status(status).json({

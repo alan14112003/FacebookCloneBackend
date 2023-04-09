@@ -22,7 +22,7 @@ var app = (0, _express["default"])();
 app.use(_express["default"]["static"](_path["default"].join(__dirname, 'public')));
 
 // sử dụng cors để kiểm tra origin
-app.use((0, _cors["default"])(_Cors["default"]));
+app.use((0, _cors["default"])());
 
 // sử dụng body-parser để parse body
 app.use(_bodyParser["default"].urlencoded({
@@ -35,7 +35,6 @@ app.use('/', _routes["default"]);
 
 // middleware bắt lỗi
 app.use(function (err, req, res, next) {
-  // const error = app.get('env') === 'development' ? err : {}
   var status = err.status || 500;
   return res.status(status).json({
     status: false,
