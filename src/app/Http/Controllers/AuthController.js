@@ -130,8 +130,8 @@ const sendMailActive = async (req, res, next) => {
     }
 
     if (userDb.status === UserStatusEnum.CONFIRMED) {
-      return res.status(400).json({
-        status: false,
+      return res.status(200).json({
+        status: true,
         body: null,
         message: 'Người dùng đã xác nhận email',
       })
@@ -160,8 +160,8 @@ const verifyEmail = async (req, res, next) => {
     const userDb = await User.findOne({ _id: userToken._id })
     if (userDb.status === UserStatusEnum.CONFIRMED) {
       return res
-        .status(400)
-        .json({ status: false, body: null, message: 'Tài khoản đã được kích hoạt' })
+        .status(200)
+        .json({ status: true, body: null, message: 'Tài khoản đã được kích hoạt' })
     }
     userDb.status = UserStatusEnum.CONFIRMED
 
@@ -174,7 +174,12 @@ const verifyEmail = async (req, res, next) => {
       avatar: userUpdate.avatar,
     }
 
-    return res.status(200).json({ status: true, body: { user, token: newToken }, message: null })
+    return res.status(200)
+    .json({
+      status: true,
+      body: { user, token: newToken },
+      message: "Kích hoạt tài khoản thành công"
+    })
   } catch (error) {
     next(error)
   }
