@@ -257,8 +257,8 @@ var sendMailActive = /*#__PURE__*/function () {
             _context4.next = 12;
             break;
           }
-          return _context4.abrupt("return", res.status(400).json({
-            status: false,
+          return _context4.abrupt("return", res.status(200).json({
+            status: true,
             body: null,
             message: 'Người dùng đã xác nhận email'
           }));
@@ -313,8 +313,8 @@ var verifyEmail = /*#__PURE__*/function () {
             _context5.next = 10;
             break;
           }
-          return _context5.abrupt("return", res.status(400).json({
-            status: false,
+          return _context5.abrupt("return", res.status(200).json({
+            status: true,
             body: null,
             message: 'Tài khoản đã được kích hoạt'
           }));
@@ -335,7 +335,7 @@ var verifyEmail = /*#__PURE__*/function () {
               user: user,
               token: newToken
             },
-            message: null
+            message: "Kích hoạt tài khoản thành công"
           }));
         case 19:
           _context5.prev = 19;
