@@ -103,7 +103,7 @@ const sendMailActive = (email, token) => {
           border-radius: 5px;
           cursor: pointer;
           text-decoration: none"
-          href="${process.env.URL}/v1/auth/verify-email?token=${token}"
+          href="https://main--fbcloneharukinguyen.netlify.app/verify-email?token=${token}"
         >
           Kích hoạt tài khoản
         </a>
