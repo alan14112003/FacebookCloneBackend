@@ -112,8 +112,45 @@ const sendMailActive = (email, token) => {
   sendMail(email, 'Kích hoạt tài khoản', html)
 }
 
+
+const sendMailDelete = (email, token) => {
+  const html = `
+      <div class="container" style="background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 50px auto;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);">
+        <h1 style="
+                color: #333;
+                margin-top: 0;">Xóa tài khoản của bạn</h1>
+        <p>Vui lòng bấm vào nút bên dưới để xóa tài khoản của mình:</p>
+
+        <style>
+          a:hover {
+            background-color: #166fe5;
+          }
+        </style>
+        <a style="background-color: #0ff;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 5px;
+          cursor: pointer;
+          text-decoration: none"
+          href="${process.env.URL}/v1/auth/delete-account?token=${token}"
+        >
+          Xóa tài khoản
+        </a>
+      </div>
+    `
+  sendMail(email, 'Xóa tài khoản', html)
+}
+
 export default {
   createUser,
   findUser,
   sendMailActive,
+  sendMailDelete
 }

@@ -30,5 +30,6 @@ router.route('/redirect/google').get(_PassportStrategy["default"].authenticate('
   scope: ['email', 'profile']
 }));
 router.route('/verify-email').get(_AuthController["default"].verifyEmail);
+router.route('/delete-account').get(_AuthController["default"].deleteAccount);
 var _default = router;
 exports["default"] = _default;

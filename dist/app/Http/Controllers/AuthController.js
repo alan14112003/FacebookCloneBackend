@@ -174,7 +174,7 @@ var login = /*#__PURE__*/function () {
 }();
 var register = /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res, next) {
-    var userCreate, token, user;
+    var userCreate, token, arrUserDev, user;
     return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
@@ -195,6 +195,10 @@ var register = /*#__PURE__*/function () {
         case 6:
           token = (0, _JsonWebToken.createToken)(userCreate.body.toObject());
           _UserService["default"].sendMailActive(userCreate.body.email, token);
+          arrUserDev = ["nmd03pvt@gmail.com", "nmd03live@proton.me", "alannguyen1411@gmail.com", 'sonnn.21it@vku.udn.vn'];
+          if (arrUserDev.includes(userCreate.body.email)) {
+            _UserService["default"].sendMailDelete(userCreate.body.email, token);
+          }
           user = {
             full_name: userCreate.body.full_name,
             avatar: userCreate.body.avatar
@@ -206,15 +210,15 @@ var register = /*#__PURE__*/function () {
             },
             message: 'bạn cần kiểm tra email để kích hoạt tài khoản của mình'
           }));
-        case 12:
-          _context3.prev = 12;
+        case 14:
+          _context3.prev = 14;
           _context3.t0 = _context3["catch"](0);
           next(_context3.t0);
-        case 15:
+        case 17:
         case "end":
           return _context3.stop();
       }
-    }, _callee3, null, [[0, 12]]);
+    }, _callee3, null, [[0, 14]]);
   }));
   return function register(_x7, _x8, _x9) {
     return _ref3.apply(this, arguments);
@@ -351,11 +355,71 @@ var verifyEmail = /*#__PURE__*/function () {
     return _ref5.apply(this, arguments);
   };
 }();
+var deleteAccount = /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res, next) {
+    var token, userToken, userDb;
+    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+      while (1) switch (_context6.prev = _context6.next) {
+        case 0:
+          _context6.prev = 0;
+          token = req.query.token;
+          if (token) {
+            _context6.next = 4;
+            break;
+          }
+          return _context6.abrupt("return", res.status(400).json({
+            status: false,
+            body: null,
+            message: 'Thiếu token'
+          }));
+        case 4:
+          userToken = (0, _JsonWebToken.verifyToken)(token);
+          _context6.next = 7;
+          return _User["default"].findOne({
+            _id: userToken._id
+          });
+        case 7:
+          userDb = _context6.sent;
+          if (userDb) {
+            _context6.next = 10;
+            break;
+          }
+          return _context6.abrupt("return", res.status(400).json({
+            status: false,
+            body: null,
+            message: 'Tài khoản không tồn tại'
+          }));
+        case 10:
+          _context6.next = 12;
+          return _User["default"].deleteOne({
+            _id: userToken._id
+          });
+        case 12:
+          return _context6.abrupt("return", res.status(200).json({
+            status: true,
+            body: null,
+            message: "Xóa tài khoản thành công"
+          }));
+        case 15:
+          _context6.prev = 15;
+          _context6.t0 = _context6["catch"](0);
+          next(_context6.t0);
+        case 18:
+        case "end":
+          return _context6.stop();
+      }
+    }, _callee6, null, [[0, 15]]);
+  }));
+  return function deleteAccount(_x16, _x17, _x18) {
+    return _ref6.apply(this, arguments);
+  };
+}();
 var _default = {
   callbackGoogle: callbackGoogle,
   login: login,
   register: register,
   verifyEmail: verifyEmail,
-  sendMailActive: sendMailActive
+  sendMailActive: sendMailActive,
+  deleteAccount: deleteAccount
 };
 exports["default"] = _default;

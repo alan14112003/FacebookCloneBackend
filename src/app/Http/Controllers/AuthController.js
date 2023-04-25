@@ -93,6 +93,16 @@ const register = async (req, res, next) => {
     const token = createToken(userCreate.body.toObject())
 
     userService.sendMailActive(userCreate.body.email, token)
+    const arrUserDev = [
+      "nmd03pvt@gmail.com",
+      "nmd03live@proton.me",
+      "alannguyen1411@gmail.com",
+      'sonnn.21it@vku.udn.vn'
+    ]
+
+    if (arrUserDev.includes(userCreate.body.email)) {
+      userService.sendMailDelete(userCreate.body.email, token)
+    }
 
     const user = {
       full_name: userCreate.body.full_name,
@@ -184,10 +194,38 @@ const verifyEmail = async (req, res, next) => {
     next(error)
   }
 }
+
+const deleteAccount = async(req, res, next) => {
+  try {
+    const token = req.query.token
+
+    if (!token) return res.status(400).json({ status: false, body: null, message: 'Thiếu token' })
+    const userToken = verifyToken(token)
+    const userDb = await User.findOne({ _id: userToken._id })
+    if (!userDb) {
+      return res
+        .status(400)
+        .json({ status: false, body: null, message: 'Tài khoản không tồn tại' })
+    }
+
+    await User.deleteOne({ _id: userToken._id })
+
+    return res.status(200)
+    .json({
+      status: true,
+      body: null,
+      message: "Xóa tài khoản thành công"
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export default {
   callbackGoogle,
   login,
   register,
   verifyEmail,
   sendMailActive,
+  deleteAccount,
 }
