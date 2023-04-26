@@ -6,7 +6,6 @@ import cors from 'cors'
 
 import connections from './config/Database'
 import routes from './routes'
-import corsOptions from './config/Cors'
 
 // Cấu hình dotenv
 dotenv.config()

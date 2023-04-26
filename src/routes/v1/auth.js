@@ -10,7 +10,7 @@ import authController from '../../app/Http/Controllers/AuthController'
 import passport from '../../config/PassportStrategy'
 
 // lấy ra bộ định tuyến
-const router = express.Router(validateBody())
+const router = express.Router()
 
 router.route('/token').get(validateUser, (req, res) => {
   res.send(req.user)

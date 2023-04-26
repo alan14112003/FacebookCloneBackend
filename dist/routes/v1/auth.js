@@ -16,7 +16,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 // import passport from 'passport'
 
 // lấy ra bộ định tuyến
-var router = _express["default"].Router((0, _ValidateRouteMiddleware.validateBody)());
+var router = _express["default"].Router();
 router.route('/token').get(_ValidateUserMiddleware.validateUser, function (req, res) {
   res.send(req.user);
 });

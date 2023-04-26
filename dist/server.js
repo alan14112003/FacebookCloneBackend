@@ -7,7 +7,6 @@ var _bodyParser = _interopRequireDefault(require("body-parser"));
 var _cors = _interopRequireDefault(require("cors"));
 var _Database = _interopRequireDefault(require("./config/Database"));
 var _routes = _interopRequireDefault(require("./routes"));
-var _Cors = _interopRequireDefault(require("./config/Cors"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 // Cấu hình dotenv
 _dotenv["default"].config();
