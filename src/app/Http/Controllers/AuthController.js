@@ -86,6 +86,7 @@ const login = async (req, res, next) => {
     const token = createToken(userFind.body.toObject())
 
     const user = {
+      email: userFind.body.email,
       full_name: userFind.body.full_name,
       avatar: userFind.body.avatar,
     }
@@ -119,6 +120,7 @@ const register = async (req, res, next) => {
     }
 
     const user = {
+      email: userCreate.body.email,
       full_name: userCreate.body.full_name,
       avatar: userCreate.body.avatar,
     }
@@ -186,7 +188,8 @@ const verifyEmail = async (req, res, next) => {
     const newToken = createToken(userDb.toObject())
 
     const user = {
-      name: userDb.full_name,
+      email: userDb.email,
+      full_name: userDb.full_name,
       avatar: userDb.avatar,
     }
 

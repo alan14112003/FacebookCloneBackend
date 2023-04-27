@@ -159,6 +159,7 @@ var login = /*#__PURE__*/function () {
         case 10:
           token = (0, _JsonWebToken.createToken)(userFind.body.toObject());
           user = {
+            email: userFind.body.email,
             full_name: userFind.body.full_name,
             avatar: userFind.body.avatar
           };
@@ -212,6 +213,7 @@ var register = /*#__PURE__*/function () {
             _UserService["default"].sendMailDelete(userCreate.body.email, token);
           }
           user = {
+            email: userCreate.body.email,
             full_name: userCreate.body.full_name,
             avatar: userCreate.body.avatar
           };
@@ -327,7 +329,8 @@ var verifyEmail = /*#__PURE__*/function () {
           userDb = _context5.sent;
           newToken = (0, _JsonWebToken.createToken)(userDb.toObject());
           user = {
-            name: userDb.full_name,
+            email: userDb.email,
+            full_name: userDb.full_name,
             avatar: userDb.avatar
           };
           if (!(userDb.status === _UserStatusEnum["default"].CONFIRMED)) {
