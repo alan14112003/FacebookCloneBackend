@@ -12,12 +12,10 @@ var _UserStatusEnum = _interopRequireDefault(require("../Enums/Users/UserStatusE
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 var userSchema = new _mongoose["default"].Schema({
   first_name: {
-    type: String,
-    lowercase: true
+    type: String
   },
   last_name: {
-    type: String,
-    lowercase: true
+    type: String
   },
   birthdate: Date,
   password: String,

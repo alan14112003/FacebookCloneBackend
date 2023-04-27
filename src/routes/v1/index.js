@@ -1,6 +1,7 @@
 import express from 'express'
-import authRoute from './auth'
-import usersRoute from './users/index'
+import authRouter from './auth'
+import userRouter from './users'
+import adminRouter from './admins'
 import CorsOrigin from '../../app/Models/CorsOrigin'
 import cors from 'cors'
 import corsOptions from '../../config/Cors'
@@ -13,8 +14,9 @@ router.route('/cors').post(async (req, res) => {
   res.status(201).json('Create success')
 })
 
-router.use('/', usersRoute)
+router.use("/admin", adminRouter)
+router.use('/', userRouter)
 // router.use(cors(corsOptions))
-router.use('/auth', authRoute)
+router.use('/auth', authRouter)
 
 export default router

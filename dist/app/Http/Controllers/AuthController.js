@@ -22,11 +22,12 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 var callbackGoogle = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res, next) {
-    var _req$user$profile, given_name, family_name, email, picture, _yield$User$findWithD, _yield$User$findWithD2, userDb, userGoogle, newUser, tokenNewUser, token;
+    var _req$user$profile, given_name, family_name, email, picture, _yield$User$findWithD, _yield$User$findWithD2, userDb, userGoogle, newUser, tokenNewUser, tokenUser, token;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           _context.prev = 0;
+          // lấy ra dữ liệu được trả về từ đăng nhập bằng google
           _req$user$profile = req.user.profile, given_name = _req$user$profile.given_name, family_name = _req$user$profile.family_name, email = _req$user$profile.email, picture = _req$user$profile.picture;
           _context.next = 4;
           return _User["default"].findWithDeleted({
@@ -61,7 +62,7 @@ var callbackGoogle = /*#__PURE__*/function () {
               },
               token: tokenNewUser
             },
-            message: null
+            message: "Đăng ký thành công"
           }));
         case 14:
           if (!userDb.deleded) {
@@ -75,15 +76,26 @@ var callbackGoogle = /*#__PURE__*/function () {
           }));
         case 16:
           if (!(userDb.status === _UserStatusEnum["default"].UNCONFIRMED)) {
-            _context.next = 18;
+            _context.next = 22;
             break;
           }
-          return _context.abrupt("return", res.status(401).json({
-            status: false,
-            body: null,
-            message: 'Người dùng chưa xác nhận email'
+          userDb.status = _UserStatusEnum["default"].CONFIRMED;
+          _context.next = 20;
+          return userDb.save();
+        case 20:
+          tokenUser = (0, _JsonWebToken.createToken)(userDb.toObject());
+          return _context.abrupt("return", res.status(200).json({
+            status: true,
+            body: {
+              user: {
+                full_name: userDb.full_name,
+                avatar: userDb.avatar
+              },
+              token: tokenUser
+            },
+            message: "Đã xác thực email"
           }));
-        case 18:
+        case 22:
           token = (0, _JsonWebToken.createToken)(userDb.toObject());
           return _context.abrupt("return", res.status(200).json({
             status: true,
@@ -94,17 +106,17 @@ var callbackGoogle = /*#__PURE__*/function () {
               },
               token: token
             },
-            message: null
+            message: "Đăng nhập thành công"
           }));
-        case 22:
-          _context.prev = 22;
+        case 26:
+          _context.prev = 26;
           _context.t0 = _context["catch"](0);
           next(_context.t0);
-        case 25:
+        case 29:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 22]]);
+    }, _callee, null, [[0, 26]]);
   }));
   return function callbackGoogle(_x, _x2, _x3) {
     return _ref.apply(this, arguments);
@@ -290,7 +302,7 @@ var sendMailActive = /*#__PURE__*/function () {
 }();
 var verifyEmail = /*#__PURE__*/function () {
   var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res, next) {
-    var token, userToken, userDb, userUpdate, newToken, user;
+    var token, userToken, userDb, newToken, user;
     return _regeneratorRuntime().wrap(function _callee5$(_context5) {
       while (1) switch (_context5.prev = _context5.next) {
         case 0:
@@ -313,26 +325,28 @@ var verifyEmail = /*#__PURE__*/function () {
           });
         case 7:
           userDb = _context5.sent;
+          newToken = (0, _JsonWebToken.createToken)(userDb.toObject());
+          user = {
+            name: userDb.full_name,
+            avatar: userDb.avatar
+          };
           if (!(userDb.status === _UserStatusEnum["default"].CONFIRMED)) {
-            _context5.next = 10;
+            _context5.next = 12;
             break;
           }
           return _context5.abrupt("return", res.status(200).json({
             status: true,
-            body: null,
+            body: {
+              user: user,
+              token: token
+            },
             message: 'Tài khoản đã được kích hoạt'
           }));
-        case 10:
+        case 12:
           userDb.status = _UserStatusEnum["default"].CONFIRMED;
-          _context5.next = 13;
+          _context5.next = 15;
           return userDb.save();
-        case 13:
-          userUpdate = _context5.sent;
-          newToken = (0, _JsonWebToken.createToken)(userUpdate.toObject());
-          user = {
-            name: userUpdate.full_name,
-            avatar: userUpdate.avatar
-          };
+        case 15:
           return _context5.abrupt("return", res.status(200).json({
             status: true,
             body: {
@@ -341,15 +355,15 @@ var verifyEmail = /*#__PURE__*/function () {
             },
             message: "Kích hoạt tài khoản thành công"
           }));
-        case 19:
-          _context5.prev = 19;
+        case 18:
+          _context5.prev = 18;
           _context5.t0 = _context5["catch"](0);
           next(_context5.t0);
-        case 22:
+        case 21:
         case "end":
           return _context5.stop();
       }
-    }, _callee5, null, [[0, 19]]);
+    }, _callee5, null, [[0, 18]]);
   }));
   return function verifyEmail(_x13, _x14, _x15) {
     return _ref5.apply(this, arguments);

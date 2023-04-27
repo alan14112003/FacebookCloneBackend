@@ -9,11 +9,9 @@ const userSchema = new mongoose.Schema(
   {
     first_name: {
       type: String,
-      lowercase: true,
     },
     last_name: {
       type: String,
-      lowercase: true,
     },
     birthdate: Date,
     password: String,

@@ -6,10 +6,12 @@ import userService from '../../Services/UserService'
 
 const callbackGoogle = async (req, res, next) => {
   try {
+    // lấy ra dữ liệu được trả về từ đăng nhập bằng google
     const { given_name, family_name, email, picture } = req.user.profile
 
     const [userDb] = await User.findWithDeleted({ email })
 
+    // nếu chưa có user nào thì tạo user
     if (!userDb) {
       const userGoogle = {
         first_name: given_name,
@@ -28,17 +30,29 @@ const callbackGoogle = async (req, res, next) => {
           user: { full_name: newUser.full_name, avatar: newUser.avatar },
           token: tokenNewUser,
         },
-        message: null,
+        message: "Đăng ký thành công",
       })
     }
 
-    if (userDb.deleded)
+    // Nếu người dùng bị khóa thì trả về lỗi
+    if (userDb.deleded) {
       return res.status(401).json({ status: false, body: null, message: 'Người dùng đã bị khóa' })
+    }
 
+    // Nếu người dùng chưa xác nhận email thì xác nhận cho họ
     if (userDb.status === UserStatusEnum.UNCONFIRMED) {
-      return res
-        .status(401)
-        .json({ status: false, body: null, message: 'Người dùng chưa xác nhận email' })
+      userDb.status = UserStatusEnum.CONFIRMED
+      await userDb.save()
+
+      const tokenUser = createToken(userDb.toObject())
+      return res.status(200).json({
+        status: true,
+        body: {
+          user: { full_name: userDb.full_name, avatar: userDb.avatar },
+          token: tokenUser,
+        },
+        message: "Đã xác thực email",
+      })
     }
 
     const token = createToken(userDb.toObject())
@@ -48,7 +62,7 @@ const callbackGoogle = async (req, res, next) => {
         user: { full_name: userDb.full_name, avatar: userDb.avatar },
         token,
       },
-      message: null,
+      message: "Đăng nhập thành công",
     })
   } catch (error) {
     next(error)
@@ -168,34 +182,40 @@ const verifyEmail = async (req, res, next) => {
     const userToken = verifyToken(token)
 
     const userDb = await User.findOne({ _id: userToken._id })
+
+    const newToken = createToken(userDb.toObject())
+
+    const user = {
+      name: userDb.full_name,
+      avatar: userDb.avatar,
+    }
+
     if (userDb.status === UserStatusEnum.CONFIRMED) {
       return res
         .status(200)
-        .json({ status: true, body: null, message: 'Tài khoản đã được kích hoạt' })
+        .json({
+          status: true,
+          body: { user, token },
+          message: 'Tài khoản đã được kích hoạt'
+        })
     }
+
     userDb.status = UserStatusEnum.CONFIRMED
 
-    const userUpdate = await userDb.save()
-
-    const newToken = createToken(userUpdate.toObject())
-
-    const user = {
-      name: userUpdate.full_name,
-      avatar: userUpdate.avatar,
-    }
+    await userDb.save()
 
     return res.status(200)
-    .json({
-      status: true,
-      body: { user, token: newToken },
-      message: "Kích hoạt tài khoản thành công"
-    })
+      .json({
+        status: true,
+        body: { user, token: newToken },
+        message: "Kích hoạt tài khoản thành công"
+      })
   } catch (error) {
     next(error)
   }
 }
 
-const deleteAccount = async(req, res, next) => {
+const deleteAccount = async (req, res, next) => {
   try {
     const token = req.query.token
 
@@ -211,11 +231,11 @@ const deleteAccount = async(req, res, next) => {
     await User.deleteOne({ _id: userToken._id })
 
     return res.status(200)
-    .json({
-      status: true,
-      body: null,
-      message: "Xóa tài khoản thành công"
-    })
+      .json({
+        status: true,
+        body: null,
+        message: "Xóa tài khoản thành công"
+      })
   } catch (error) {
     next(error)
   }

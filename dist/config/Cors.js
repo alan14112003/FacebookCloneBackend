@@ -17,21 +17,28 @@ var corsOptions = {
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
-            _context.next = 2;
-            return _CorsOrigin["default"].findOne({
-              domain: _origin
-            });
-          case 2:
-            corsOrigin = _context.sent;
-            if (!corsOrigin) {
-              _context.next = 6;
+            if (!(_origin === undefined)) {
+              _context.next = 3;
               break;
             }
             callback(null, true);
             return _context.abrupt("return");
-          case 6:
+          case 3:
+            _context.next = 5;
+            return _CorsOrigin["default"].findOne({
+              domain: _origin
+            });
+          case 5:
+            corsOrigin = _context.sent;
+            if (!corsOrigin) {
+              _context.next = 9;
+              break;
+            }
+            callback(null, true);
+            return _context.abrupt("return");
+          case 9:
             callback(new Error('Not allowed by CORS'));
-          case 7:
+          case 10:
           case "end":
             return _context.stop();
         }
