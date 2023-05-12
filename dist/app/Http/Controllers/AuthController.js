@@ -22,23 +22,24 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 var callbackGoogle = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res, next) {
-    var _req$user$profile, given_name, family_name, email, picture, _yield$User$findWithD, _yield$User$findWithD2, userDb, userGoogle, newUser, tokenNewUser, tokenUser, token;
+    var redirectResponseUrl, _req$user$profile, given_name, family_name, email, picture, _yield$User$findWithD, _yield$User$findWithD2, userDb, userGoogle, newUser, tokenNewUser, tokenUser, token;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           _context.prev = 0;
-          // lấy ra dữ liệu được trả về từ đăng nhập bằng google
+          // định nghĩa url để chuyển hướng.
+          redirectResponseUrl = 'https://fbcloneharukinguyen.netlify.app/google-login'; // lấy ra dữ liệu được trả về từ đăng nhập bằng google
           _req$user$profile = req.user.profile, given_name = _req$user$profile.given_name, family_name = _req$user$profile.family_name, email = _req$user$profile.email, picture = _req$user$profile.picture;
-          _context.next = 4;
+          _context.next = 5;
           return _User["default"].findWithDeleted({
             email: email
           });
-        case 4:
+        case 5:
           _yield$User$findWithD = _context.sent;
           _yield$User$findWithD2 = _slicedToArray(_yield$User$findWithD, 1);
           userDb = _yield$User$findWithD2[0];
           if (userDb) {
-            _context.next = 14;
+            _context.next = 15;
             break;
           }
           userGoogle = {
@@ -49,11 +50,11 @@ var callbackGoogle = /*#__PURE__*/function () {
             status: _UserStatusEnum["default"].CONFIRMED
           };
           newUser = new _User["default"](userGoogle);
-          _context.next = 12;
+          _context.next = 13;
           return newUser.save();
-        case 12:
+        case 13:
           tokenNewUser = (0, _JsonWebToken.createToken)(newUser.toObject());
-          return _context.abrupt("return", res.status(201).json({
+          return _context.abrupt("return", res.redirect("".concat(redirectResponseUrl, "?res=").concat(Buffer.from(JSON.stringify({
             status: true,
             body: {
               user: {
@@ -62,29 +63,29 @@ var callbackGoogle = /*#__PURE__*/function () {
               },
               token: tokenNewUser
             },
-            message: "Đăng ký thành công"
-          }));
-        case 14:
+            message: 'Đăng ký thành công'
+          })).toString('base64'))));
+        case 15:
           if (!userDb.deleded) {
-            _context.next = 16;
+            _context.next = 17;
             break;
           }
-          return _context.abrupt("return", res.status(401).json({
+          return _context.abrupt("return", res.redirect("".concat(redirectResponseUrl, "?res=").concat(Buffer.from(JSON.stringify({
             status: false,
             body: null,
             message: 'Người dùng đã bị khóa'
-          }));
-        case 16:
+          })).toString('base64'))));
+        case 17:
           if (!(userDb.status === _UserStatusEnum["default"].UNCONFIRMED)) {
-            _context.next = 22;
+            _context.next = 23;
             break;
           }
           userDb.status = _UserStatusEnum["default"].CONFIRMED;
-          _context.next = 20;
+          _context.next = 21;
           return userDb.save();
-        case 20:
+        case 21:
           tokenUser = (0, _JsonWebToken.createToken)(userDb.toObject());
-          return _context.abrupt("return", res.status(200).json({
+          return _context.abrupt("return", res.redirect("".concat(redirectResponseUrl, "?res=").concat(Buffer.from(JSON.stringify({
             status: true,
             body: {
               user: {
@@ -93,11 +94,11 @@ var callbackGoogle = /*#__PURE__*/function () {
               },
               token: tokenUser
             },
-            message: "Đã xác thực email"
-          }));
-        case 22:
+            message: 'Đã xác thực email'
+          })).toString('base64'))));
+        case 23:
           token = (0, _JsonWebToken.createToken)(userDb.toObject());
-          return _context.abrupt("return", res.status(200).json({
+          return _context.abrupt("return", res.redirect("".concat(redirectResponseUrl, "?res=").concat(Buffer.from(JSON.stringify({
             status: true,
             body: {
               user: {
@@ -106,17 +107,17 @@ var callbackGoogle = /*#__PURE__*/function () {
               },
               token: token
             },
-            message: "Đăng nhập thành công"
-          }));
-        case 26:
-          _context.prev = 26;
+            message: 'Đăng nhập thành công'
+          })).toString('base64'))));
+        case 27:
+          _context.prev = 27;
           _context.t0 = _context["catch"](0);
           next(_context.t0);
-        case 29:
+        case 30:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 26]]);
+    }, _callee, null, [[0, 27]]);
   }));
   return function callbackGoogle(_x, _x2, _x3) {
     return _ref.apply(this, arguments);
@@ -208,7 +209,7 @@ var register = /*#__PURE__*/function () {
         case 6:
           token = (0, _JsonWebToken.createToken)(userCreate.body.toObject());
           _UserService["default"].sendMailActive(userCreate.body.email, token);
-          arrUserDev = ["nmd03pvt@gmail.com", "nmd03live@proton.me", "alannguyen1411@gmail.com", 'sonnn.21it@vku.udn.vn'];
+          arrUserDev = ['nmd03pvt@gmail.com', 'nmd03live@proton.me', 'alannguyen1411@gmail.com', 'sonnn.21it@vku.udn.vn'];
           if (arrUserDev.includes(userCreate.body.email)) {
             _UserService["default"].sendMailDelete(userCreate.body.email, token);
           }
@@ -356,7 +357,7 @@ var verifyEmail = /*#__PURE__*/function () {
               user: user,
               token: newToken
             },
-            message: "Kích hoạt tài khoản thành công"
+            message: 'Kích hoạt tài khoản thành công'
           }));
         case 18:
           _context5.prev = 18;
@@ -415,7 +416,7 @@ var deleteAccount = /*#__PURE__*/function () {
           return _context6.abrupt("return", res.status(200).json({
             status: true,
             body: null,
-            message: "Xóa tài khoản thành công"
+            message: 'Xóa tài khoản thành công'
           }));
         case 15:
           _context6.prev = 15;
@@ -431,12 +432,107 @@ var deleteAccount = /*#__PURE__*/function () {
     return _ref6.apply(this, arguments);
   };
 }();
+var sendMailChangePassword = /*#__PURE__*/function () {
+  var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res, next) {
+    var email, userFind, token;
+    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+      while (1) switch (_context7.prev = _context7.next) {
+        case 0:
+          _context7.prev = 0;
+          email = req.body.email;
+          _context7.next = 4;
+          return _UserService["default"].findUser({
+            email: email
+          });
+        case 4:
+          userFind = _context7.sent;
+          if (userFind.status) {
+            _context7.next = 7;
+            break;
+          }
+          return _context7.abrupt("return", res.status(400).json({
+            status: false,
+            body: null,
+            message: userFind.message
+          }));
+        case 7:
+          token = (0, _JsonWebToken.createToken)(userFind.toObject, '1h');
+          _UserService["default"].sendMailChangePassword(email, token);
+          return _context7.abrupt("return", res.json({
+            status: true,
+            body: null,
+            message: 'Kiểm tra email để lấy lại mật khẩu'
+          }));
+        case 12:
+          _context7.prev = 12;
+          _context7.t0 = _context7["catch"](0);
+          next(_context7.t0);
+        case 15:
+        case "end":
+          return _context7.stop();
+      }
+    }, _callee7, null, [[0, 12]]);
+  }));
+  return function sendMailChangePassword(_x19, _x20, _x21) {
+    return _ref7.apply(this, arguments);
+  };
+}();
+var changePassword = /*#__PURE__*/function () {
+  var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(req, res, next) {
+    var user, password, userFind;
+    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+      while (1) switch (_context8.prev = _context8.next) {
+        case 0:
+          _context8.prev = 0;
+          user = req.user;
+          password = req.body.password;
+          _context8.next = 5;
+          return _UserService["default"].findUser({
+            _id: user._id
+          });
+        case 5:
+          userFind = _context8.sent;
+          if (userFind.status) {
+            _context8.next = 8;
+            break;
+          }
+          return _context8.abrupt("return", res.status(400).json({
+            status: false,
+            body: null,
+            message: userFind.message
+          }));
+        case 8:
+          userFind.body.password = password;
+          _context8.next = 11;
+          return userFind.body.save();
+        case 11:
+          return _context8.abrupt("return", res.json({
+            status: true,
+            body: null,
+            message: 'Đổi mật khẩu thành công'
+          }));
+        case 14:
+          _context8.prev = 14;
+          _context8.t0 = _context8["catch"](0);
+          next(_context8.t0);
+        case 17:
+        case "end":
+          return _context8.stop();
+      }
+    }, _callee8, null, [[0, 14]]);
+  }));
+  return function changePassword(_x22, _x23, _x24) {
+    return _ref8.apply(this, arguments);
+  };
+}();
 var _default = {
   callbackGoogle: callbackGoogle,
   login: login,
   register: register,
   verifyEmail: verifyEmail,
   sendMailActive: sendMailActive,
-  deleteAccount: deleteAccount
+  deleteAccount: deleteAccount,
+  sendMailChangePassword: sendMailChangePassword,
+  changePassword: changePassword
 };
 exports["default"] = _default;

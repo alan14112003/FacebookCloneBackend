@@ -9,6 +9,7 @@ var _ValidateRouteMiddleware = require("../../app/Http/Middleware/ValidateRouteM
 var _ValidateUserMiddleware = require("../../app/Http/Middleware/ValidateUserMiddleware");
 var _RegisterValidator = _interopRequireDefault(require("../../app/Http/Validators/body/RegisterValidator"));
 var _SendMailActiveValidator = _interopRequireDefault(require("../../app/Http/Validators/body/SendMailActiveValidator"));
+var _ChangePasswordValidator = _interopRequireDefault(require("../../app/Http/Validators/body/ChangePasswordValidator"));
 var _LoginValidator = _interopRequireDefault(require("../../app/Http/Validators/body/LoginValidator"));
 var _AuthController = _interopRequireDefault(require("../../app/Http/Controllers/AuthController"));
 var _PassportStrategy = _interopRequireDefault(require("../../config/PassportStrategy"));
@@ -21,6 +22,8 @@ router.route('/token').get(_ValidateUserMiddleware.validateUser, function (req, 
   res.send(req.user);
 });
 router.route('/send-mail-active').post((0, _ValidateRouteMiddleware.validateBody)(_SendMailActiveValidator["default"]), _AuthController["default"].sendMailActive);
+router.route('/send-mail-change-password').post((0, _ValidateRouteMiddleware.validateBody)(_SendMailActiveValidator["default"]), _AuthController["default"].sendMailChangePassword);
+router.route('/change-password').post(_ValidateUserMiddleware.validateUser, (0, _ValidateRouteMiddleware.validateBody)(_ChangePasswordValidator["default"]), _AuthController["default"].changePassword);
 router.route('/callback/google').get(_PassportStrategy["default"].authenticate('google', {
   session: false
 }), _AuthController["default"].callbackGoogle);
