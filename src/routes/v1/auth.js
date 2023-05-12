@@ -3,6 +3,7 @@ import { validateBody } from '~/app/Http/Middleware/ValidateRouteMiddleware'
 import { validateUser } from '../../app/Http/Middleware/ValidateUserMiddleware'
 import registerValidator from '../../app/Http/Validators/body/RegisterValidator'
 import sendMailActiveValidator from '../../app/Http/Validators/body/SendMailActiveValidator'
+import changePasswordValidator from '../../app/Http/Validators/body/ChangePasswordValidator'
 import loginValidator from '../../app/Http/Validators/body/LoginValidator'
 import authController from '../../app/Http/Controllers/AuthController'
 
@@ -19,6 +20,12 @@ router.route('/token').get(validateUser, (req, res) => {
 router
   .route('/send-mail-active')
   .post(validateBody(sendMailActiveValidator), authController.sendMailActive)
+  
+router
+  .route('/send-mail-change-password')
+  .post(validateBody(sendMailActiveValidator), authController.sendMailChangePassword)
+
+router.route('/change-password').post(validateUser, validateBody(changePasswordValidator), authController.changePassword)  
 
 router.route('/callback/google').get(
   passport.authenticate('google', {

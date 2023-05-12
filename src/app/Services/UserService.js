@@ -78,6 +78,7 @@ const findUser = async (userField = {}) => {
 }
 
 const sendMailActive = (email, token) => {
+  const urlRedirect = 'https://main--fbcloneharukinguyen.netlify.app/verify-email'
   const html = `
       <div class="container" style="background-color: #fff;
             border-radius: 5px;
@@ -103,7 +104,7 @@ const sendMailActive = (email, token) => {
           border-radius: 5px;
           cursor: pointer;
           text-decoration: none"
-          href="https://main--fbcloneharukinguyen.netlify.app/verify-email?token=${token}"
+          href="${urlRedirect}?token=${token}"
         >
           Kích hoạt tài khoản
         </a>
@@ -112,6 +113,42 @@ const sendMailActive = (email, token) => {
   sendMail(email, 'Kích hoạt tài khoản', html)
 }
 
+
+const sendMailChangePassword = (email, token) => {
+  const urlRedirect = 'https://main--fbcloneharukinguyen.netlify.app/verify-email'
+  const html = `
+      <div class="container" style="background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 50px auto;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);">
+        <h1 style="
+                color: #333;
+                margin-top: 0;">Lấy lại mật khẩu</h1>
+        <p>Vui lòng bấm vào nút bên dưới để lấy lại mật khẩu của mình:</p>
+
+        <style>
+          a:hover {
+            background-color: #166fe5;
+          }
+        </style>
+        <a style="background-color: #1877f2;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 5px;
+          cursor: pointer;
+          text-decoration: none"
+          href="${urlRedirect}?token=${token}"
+        >
+          Lấy lại mật khẩu
+        </a>
+      </div>
+    `
+  sendMail(email, 'Lấy lại mật khẩu', html)
+}
 
 const sendMailDelete = (email, token) => {
   const html = `
@@ -152,5 +189,6 @@ export default {
   createUser,
   findUser,
   sendMailActive,
-  sendMailDelete
+  sendMailDelete,
+  sendMailChangePassword
 }

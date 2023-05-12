@@ -6,6 +6,9 @@ import userService from '../../Services/UserService'
 
 const callbackGoogle = async (req, res, next) => {
   try {
+    // định nghĩa url để chuyển hướng.
+    const redirectResponseUrl = 'https://fbcloneharukinguyen.netlify.app/google-login'
+
     // lấy ra dữ liệu được trả về từ đăng nhập bằng google
     const { given_name, family_name, email, picture } = req.user.profile
 
@@ -24,19 +27,27 @@ const callbackGoogle = async (req, res, next) => {
       await newUser.save()
 
       const tokenNewUser = createToken(newUser.toObject())
-      return res.status(201).json({
-        status: true,
-        body: {
-          user: { full_name: newUser.full_name, avatar: newUser.avatar },
-          token: tokenNewUser,
-        },
-        message: "Đăng ký thành công",
-      })
+      return res.redirect(
+        `${redirectResponseUrl}?res=${Buffer.from(
+          JSON.stringify({
+            status: true,
+            body: {
+              user: { full_name: newUser.full_name, avatar: newUser.avatar },
+              token: tokenNewUser,
+            },
+            message: 'Đăng ký thành công',
+          })
+        ).toString('base64')}`
+      )
     }
 
     // Nếu người dùng bị khóa thì trả về lỗi
     if (userDb.deleded) {
-      return res.status(401).json({ status: false, body: null, message: 'Người dùng đã bị khóa' })
+      return res.redirect(
+        `${redirectResponseUrl}?res=${Buffer.from(
+          JSON.stringify({ status: false, body: null, message: 'Người dùng đã bị khóa' })
+        ).toString('base64')}`
+      )
     }
 
     // Nếu người dùng chưa xác nhận email thì xác nhận cho họ
@@ -45,25 +56,33 @@ const callbackGoogle = async (req, res, next) => {
       await userDb.save()
 
       const tokenUser = createToken(userDb.toObject())
-      return res.status(200).json({
-        status: true,
-        body: {
-          user: { full_name: userDb.full_name, avatar: userDb.avatar },
-          token: tokenUser,
-        },
-        message: "Đã xác thực email",
-      })
+      return res.redirect(
+        `${redirectResponseUrl}?res=${Buffer.from(
+          JSON.stringify({
+            status: true,
+            body: {
+              user: { full_name: userDb.full_name, avatar: userDb.avatar },
+              token: tokenUser,
+            },
+            message: 'Đã xác thực email',
+          })
+        ).toString('base64')}`
+      )
     }
 
     const token = createToken(userDb.toObject())
-    return res.status(200).json({
-      status: true,
-      body: {
-        user: { full_name: userDb.full_name, avatar: userDb.avatar },
-        token,
-      },
-      message: "Đăng nhập thành công",
-    })
+    return res.redirect(
+      `${redirectResponseUrl}?res=${Buffer.from(
+        JSON.stringify({
+          status: true,
+          body: {
+            user: { full_name: userDb.full_name, avatar: userDb.avatar },
+            token,
+          },
+          message: 'Đăng nhập thành công',
+        })
+      ).toString('base64')}`
+    )
   } catch (error) {
     next(error)
   }
@@ -109,10 +128,10 @@ const register = async (req, res, next) => {
 
     userService.sendMailActive(userCreate.body.email, token)
     const arrUserDev = [
-      "nmd03pvt@gmail.com",
-      "nmd03live@proton.me",
-      "alannguyen1411@gmail.com",
-      'sonnn.21it@vku.udn.vn'
+      'nmd03pvt@gmail.com',
+      'nmd03live@proton.me',
+      'alannguyen1411@gmail.com',
+      'sonnn.21it@vku.udn.vn',
     ]
 
     if (arrUserDev.includes(userCreate.body.email)) {
@@ -194,25 +213,22 @@ const verifyEmail = async (req, res, next) => {
     }
 
     if (userDb.status === UserStatusEnum.CONFIRMED) {
-      return res
-        .status(200)
-        .json({
-          status: true,
-          body: { user, token },
-          message: 'Tài khoản đã được kích hoạt'
-        })
+      return res.status(200).json({
+        status: true,
+        body: { user, token },
+        message: 'Tài khoản đã được kích hoạt',
+      })
     }
 
     userDb.status = UserStatusEnum.CONFIRMED
 
     await userDb.save()
 
-    return res.status(200)
-      .json({
-        status: true,
-        body: { user, token: newToken },
-        message: "Kích hoạt tài khoản thành công"
-      })
+    return res.status(200).json({
+      status: true,
+      body: { user, token: newToken },
+      message: 'Kích hoạt tài khoản thành công',
+    })
   } catch (error) {
     next(error)
   }
@@ -226,19 +242,60 @@ const deleteAccount = async (req, res, next) => {
     const userToken = verifyToken(token)
     const userDb = await User.findOne({ _id: userToken._id })
     if (!userDb) {
-      return res
-        .status(400)
-        .json({ status: false, body: null, message: 'Tài khoản không tồn tại' })
+      return res.status(400).json({ status: false, body: null, message: 'Tài khoản không tồn tại' })
     }
 
     await User.deleteOne({ _id: userToken._id })
 
-    return res.status(200)
-      .json({
-        status: true,
-        body: null,
-        message: "Xóa tài khoản thành công"
-      })
+    return res.status(200).json({
+      status: true,
+      body: null,
+      message: 'Xóa tài khoản thành công',
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const sendMailChangePassword = async (req, res, next) => {
+  try {
+    const { email } = req.body
+
+    const userFind = await userService.findUser({ email })
+    if (!userFind.status) {
+      return res.status(400).json({ status: false, body: null, message: userFind.message })
+    }
+
+    const token = createToken(userFind.toObject, '1h')
+    userService.sendMailChangePassword(email, token)
+
+    return res.json({
+      status: true,
+      body: null,
+      message: 'Kiểm tra email để lấy lại mật khẩu',
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const changePassword = async (req, res, next) => {
+  try {
+    const user = req.user
+    const { password } = req.body
+    const userFind = await userService.findUser({ _id: user._id })
+    if (!userFind.status) {
+      return res.status(400).json({ status: false, body: null, message: userFind.message })
+    }
+
+    userFind.body.password = password
+    await userFind.body.save()
+
+    return res.json({
+      status: true,
+      body: null,
+      message: 'Đổi mật khẩu thành công',
+    })
   } catch (error) {
     next(error)
   }
@@ -251,4 +308,6 @@ export default {
   verifyEmail,
   sendMailActive,
   deleteAccount,
+  sendMailChangePassword,
+  changePassword,
 }

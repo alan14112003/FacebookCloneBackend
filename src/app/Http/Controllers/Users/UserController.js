@@ -1,3 +1,4 @@
+import { createToken } from '../../../../config/JsonWebToken'
 import User from '../../../Models/User'
 
 const emailUsers = async (req, res, next) => {
@@ -16,5 +17,5 @@ const emailUsers = async (req, res, next) => {
 }
 
 export default {
-  emailUsers
+  emailUsers,
 }

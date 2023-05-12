@@ -20,6 +20,9 @@ const validateUser = async (req, res, next) => {
     req.user = userFind.body
     next()
   } catch (error) {
+    if (error.message == 'jwt expired') {
+      return res.status(401).json({status: false, body: null, message: 'Token đã hết hạn'})
+    }
     next(error)
   }
 }
