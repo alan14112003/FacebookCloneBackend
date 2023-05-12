@@ -58,6 +58,7 @@ var callbackGoogle = /*#__PURE__*/function () {
             status: true,
             body: {
               user: {
+                email: newUser.email,
                 full_name: newUser.full_name,
                 avatar: newUser.avatar
               },
@@ -89,6 +90,7 @@ var callbackGoogle = /*#__PURE__*/function () {
             status: true,
             body: {
               user: {
+                email: userDb.email,
                 full_name: userDb.full_name,
                 avatar: userDb.avatar
               },
@@ -102,6 +104,7 @@ var callbackGoogle = /*#__PURE__*/function () {
             status: true,
             body: {
               user: {
+                email: userDb.email,
                 full_name: userDb.full_name,
                 avatar: userDb.avatar
               },

@@ -154,12 +154,12 @@ var findUser = /*#__PURE__*/function () {
   };
 }();
 var sendMailActive = function sendMailActive(email, token) {
-  var urlRedirect = 'https://main--fbcloneharukinguyen.netlify.app/verify-email';
+  var urlRedirect = 'https://fbcloneharukinguyen.netlify.app/verify-email';
   var html = "\n      <div class=\"container\" style=\"background-color: #fff;\n            border-radius: 5px;\n            padding: 20px;\n            margin: 50px auto;\n            max-width: 500px;\n            text-align: center;\n            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);\">\n        <h1 style=\"\n                color: #333;\n                margin-top: 0;\">K\xEDch ho\u1EA1t t\xE0i kho\u1EA3n c\u1EE7a b\u1EA1n</h1>\n        <p>Vui l\xF2ng b\u1EA5m v\xE0o n\xFAt b\xEAn d\u01B0\u1EDBi \u0111\u1EC3 k\xEDch ho\u1EA1t t\xE0i kho\u1EA3n c\u1EE7a m\xECnh:</p>\n\n        <style>\n          a:hover {\n            background-color: #166fe5;\n          }\n        </style>\n        <a style=\"background-color: #1877f2;\n          color: white;\n          border: none;\n          padding: 10px 20px;\n          border-radius: 5px;\n          cursor: pointer;\n          text-decoration: none\"\n          href=\"".concat(urlRedirect, "?token=").concat(token, "\"\n        >\n          K\xEDch ho\u1EA1t t\xE0i kho\u1EA3n\n        </a>\n      </div>\n    ");
   (0, _SendMail["default"])(email, 'Kích hoạt tài khoản', html);
 };
 var sendMailChangePassword = function sendMailChangePassword(email, token) {
-  var urlRedirect = 'https://main--fbcloneharukinguyen.netlify.app/verify-email';
+  var urlRedirect = 'https://fbcloneharukinguyen.netlify.app/change-password';
   var html = "\n      <div class=\"container\" style=\"background-color: #fff;\n            border-radius: 5px;\n            padding: 20px;\n            margin: 50px auto;\n            max-width: 500px;\n            text-align: center;\n            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);\">\n        <h1 style=\"\n                color: #333;\n                margin-top: 0;\">L\u1EA5y l\u1EA1i m\u1EADt kh\u1EA9u</h1>\n        <p>Vui l\xF2ng b\u1EA5m v\xE0o n\xFAt b\xEAn d\u01B0\u1EDBi \u0111\u1EC3 l\u1EA5y l\u1EA1i m\u1EADt kh\u1EA9u c\u1EE7a m\xECnh:</p>\n\n        <style>\n          a:hover {\n            background-color: #166fe5;\n          }\n        </style>\n        <a style=\"background-color: #1877f2;\n          color: white;\n          border: none;\n          padding: 10px 20px;\n          border-radius: 5px;\n          cursor: pointer;\n          text-decoration: none\"\n          href=\"".concat(urlRedirect, "?token=").concat(token, "\"\n        >\n          L\u1EA5y l\u1EA1i m\u1EADt kh\u1EA9u\n        </a>\n      </div>\n    ");
   (0, _SendMail["default"])(email, 'Lấy lại mật khẩu', html);
 };

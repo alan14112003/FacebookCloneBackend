@@ -78,7 +78,7 @@ const findUser = async (userField = {}) => {
 }
 
 const sendMailActive = (email, token) => {
-  const urlRedirect = 'https://main--fbcloneharukinguyen.netlify.app/verify-email'
+  const urlRedirect = 'https://fbcloneharukinguyen.netlify.app/verify-email'
   const html = `
       <div class="container" style="background-color: #fff;
             border-radius: 5px;
@@ -115,7 +115,7 @@ const sendMailActive = (email, token) => {
 
 
 const sendMailChangePassword = (email, token) => {
-  const urlRedirect = 'https://main--fbcloneharukinguyen.netlify.app/verify-email'
+  const urlRedirect = 'https://fbcloneharukinguyen.netlify.app/change-password'
   const html = `
       <div class="container" style="background-color: #fff;
             border-radius: 5px;

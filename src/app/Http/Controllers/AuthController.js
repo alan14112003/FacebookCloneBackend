@@ -32,7 +32,7 @@ const callbackGoogle = async (req, res, next) => {
           JSON.stringify({
             status: true,
             body: {
-              user: { full_name: newUser.full_name, avatar: newUser.avatar },
+              user: { email: newUser.email, full_name: newUser.full_name, avatar: newUser.avatar },
               token: tokenNewUser,
             },
             message: 'Đăng ký thành công',
@@ -61,7 +61,7 @@ const callbackGoogle = async (req, res, next) => {
           JSON.stringify({
             status: true,
             body: {
-              user: { full_name: userDb.full_name, avatar: userDb.avatar },
+              user: { email: userDb.email, full_name: userDb.full_name, avatar: userDb.avatar },
               token: tokenUser,
             },
             message: 'Đã xác thực email',
@@ -76,7 +76,7 @@ const callbackGoogle = async (req, res, next) => {
         JSON.stringify({
           status: true,
           body: {
-            user: { full_name: userDb.full_name, avatar: userDb.avatar },
+            user: { email: userDb.email, full_name: userDb.full_name, avatar: userDb.avatar },
             token,
           },
           message: 'Đăng nhập thành công',
