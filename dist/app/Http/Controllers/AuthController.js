@@ -456,7 +456,7 @@ var sendMailChangePassword = /*#__PURE__*/function () {
             message: userFind.message
           }));
         case 7:
-          token = (0, _JsonWebToken.createToken)(userFind.toObject, '1h');
+          token = (0, _JsonWebToken.createToken)(userFind.toObject(), '1h');
           _UserService["default"].sendMailChangePassword(email, token);
           return _context7.abrupt("return", res.json({
             status: true,
