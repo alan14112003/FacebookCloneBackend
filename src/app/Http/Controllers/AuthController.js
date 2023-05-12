@@ -266,7 +266,7 @@ const sendMailChangePassword = async (req, res, next) => {
       return res.status(400).json({ status: false, body: null, message: userFind.message })
     }
 
-    const token = createToken(userFind.toObject(), '1h')
+    const token = createToken(userFind.body.toObject(), '1h')
     userService.sendMailChangePassword(email, token)
 
     return res.json({
