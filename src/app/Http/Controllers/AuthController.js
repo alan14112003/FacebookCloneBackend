@@ -20,6 +20,7 @@ const callbackGoogle = async (req, res, next) => {
         first_name: given_name,
         last_name: family_name,
         email,
+        password: '',
         avatar: picture,
         status: UserStatusEnum.CONFIRMED,
       }
