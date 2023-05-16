@@ -46,6 +46,7 @@ var callbackGoogle = /*#__PURE__*/function () {
             first_name: given_name,
             last_name: family_name,
             email: email,
+            password: '',
             avatar: picture,
             status: _UserStatusEnum["default"].CONFIRMED
           };
