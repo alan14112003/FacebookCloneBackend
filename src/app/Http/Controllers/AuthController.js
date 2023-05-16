@@ -1,4 +1,4 @@
-import { comparePass } from '../../../config/Bcrypt'
+import { comparePass, hashPass } from '../../../config/Bcrypt'
 import { createToken, verifyToken } from '../../../config/JsonWebToken'
 import UserStatusEnum from '../../Enums/Users/UserStatusEnum'
 import User from '../../Models/User'
@@ -289,7 +289,8 @@ const changePassword = async (req, res, next) => {
       return res.status(400).json({ status: false, body: null, message: userFind.message })
     }
 
-    userFind.body.password = password
+    // hash mật khẩu cho user sau đó lưu vào database
+    userFind.body.password = hashPass(password)
     await userFind.body.save()
 
     return res.json({

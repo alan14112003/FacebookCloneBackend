@@ -506,7 +506,8 @@ var changePassword = /*#__PURE__*/function () {
             message: userFind.message
           }));
         case 8:
-          userFind.body.password = password;
+          // hash mật khẩu cho user sau đó lưu vào database
+          userFind.body.password = (0, _Bcrypt.hashPass)(password);
           _context8.next = 11;
           return userFind.body.save();
         case 11:
