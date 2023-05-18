@@ -42,7 +42,7 @@ router
   .route('/redirect/google')
   .get(passport.authenticate('google', { scope: ['email', 'profile'] }))
 
-router.route('/verify-email').get(authController.verifyEmail)
+router.route('/verify-email').get(validateUser, authController.verifyEmail)
 router.route('/delete-account').get(authController.deleteAccount)
 
 export default router

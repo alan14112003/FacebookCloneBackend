@@ -23,7 +23,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 var callbackGoogle = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res, next) {
-    var redirectResponseUrl, _req$user$profile, given_name, family_name, email, picture, _yield$User$findWithD, _yield$User$findWithD2, userDb, userGoogle, newUser, tokenNewUser, tokenUser, token;
+    var redirectResponseUrl, _req$user$profile, given_name, family_name, email, picture, _yield$User$findWithD, _yield$User$findWithD2, userDb, userGoogle, newUser, tokenNewUser, tokenUser, _token;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
@@ -101,7 +101,7 @@ var callbackGoogle = /*#__PURE__*/function () {
             message: 'Đã xác thực email'
           })).toString('base64'))));
         case 23:
-          token = (0, _JsonWebToken.createToken)(userDb.toObject());
+          _token = (0, _JsonWebToken.createToken)(userDb.toObject());
           return _context.abrupt("return", res.redirect("".concat(redirectResponseUrl, "?res=").concat(Buffer.from(JSON.stringify({
             status: true,
             body: {
@@ -110,7 +110,7 @@ var callbackGoogle = /*#__PURE__*/function () {
                 full_name: userDb.full_name,
                 avatar: userDb.avatar
               },
-              token: token
+              token: _token
             },
             message: 'Đăng nhập thành công'
           })).toString('base64'))));
@@ -130,7 +130,7 @@ var callbackGoogle = /*#__PURE__*/function () {
 }();
 var login = /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res, next) {
-    var _req$body, email, password, userFind, checkPassword, token, user;
+    var _req$body, email, password, userFind, checkPassword, _token2, user;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
@@ -163,7 +163,7 @@ var login = /*#__PURE__*/function () {
             message: 'Sai mật khẩu'
           }));
         case 10:
-          token = (0, _JsonWebToken.createToken)(userFind.body.toObject());
+          _token2 = (0, _JsonWebToken.createToken)(userFind.body.toObject());
           user = {
             email: userFind.body.email,
             full_name: userFind.body.full_name,
@@ -173,7 +173,7 @@ var login = /*#__PURE__*/function () {
             status: true,
             body: {
               user: user,
-              token: token
+              token: _token2
             },
             message: null
           }));
@@ -193,7 +193,7 @@ var login = /*#__PURE__*/function () {
 }();
 var register = /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res, next) {
-    var userCreate, token, arrUserDev, user;
+    var userCreate, _token3, arrUserDev, user;
     return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
@@ -212,11 +212,11 @@ var register = /*#__PURE__*/function () {
             message: userCreate.message
           }));
         case 6:
-          token = (0, _JsonWebToken.createToken)(userCreate.body.toObject());
-          _UserService["default"].sendMailActive(userCreate.body.email, token);
+          _token3 = (0, _JsonWebToken.createToken)(userCreate.body.toObject());
+          _UserService["default"].sendMailActive(userCreate.body.email, _token3);
           arrUserDev = ['nmd03pvt@gmail.com', 'nmd03live@proton.me', 'alannguyen1411@gmail.com', 'sonnn.21it@vku.udn.vn'];
           if (arrUserDev.includes(userCreate.body.email)) {
-            _UserService["default"].sendMailDelete(userCreate.body.email, token);
+            _UserService["default"].sendMailDelete(userCreate.body.email, _token3);
           }
           user = {
             email: userCreate.body.email,
@@ -246,7 +246,7 @@ var register = /*#__PURE__*/function () {
 }();
 var sendMailActive = /*#__PURE__*/function () {
   var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res, next) {
-    var _yield$User$findWithD3, _yield$User$findWithD4, userDb, token;
+    var _yield$User$findWithD3, _yield$User$findWithD4, userDb, _token4;
     return _regeneratorRuntime().wrap(function _callee4$(_context4) {
       while (1) switch (_context4.prev = _context4.next) {
         case 0:
@@ -279,8 +279,8 @@ var sendMailActive = /*#__PURE__*/function () {
             message: 'Người dùng đã xác nhận email'
           }));
         case 12:
-          token = (0, _JsonWebToken.createToken)(userDb.toObject());
-          _UserService["default"].sendMailActive(userDb.email, token);
+          _token4 = (0, _JsonWebToken.createToken)(userDb.toObject());
+          _UserService["default"].sendMailActive(userDb.email, _token4);
           return _context4.abrupt("return", res.json({
             status: true,
             body: null,
@@ -300,31 +300,65 @@ var sendMailActive = /*#__PURE__*/function () {
     return _ref4.apply(this, arguments);
   };
 }();
-var verifyEmail = /*#__PURE__*/function () {
+var sendMailChangePassword = /*#__PURE__*/function () {
   var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res, next) {
-    var token, userToken, userDb, newToken, user;
+    var email, userFind, _token5;
     return _regeneratorRuntime().wrap(function _callee5$(_context5) {
       while (1) switch (_context5.prev = _context5.next) {
         case 0:
           _context5.prev = 0;
-          token = req.query.token;
-          if (token) {
-            _context5.next = 4;
+          email = req.body.email;
+          _context5.next = 4;
+          return _UserService["default"].findUser({
+            email: email
+          });
+        case 4:
+          userFind = _context5.sent;
+          if (userFind.status) {
+            _context5.next = 7;
             break;
           }
           return _context5.abrupt("return", res.status(400).json({
             status: false,
             body: null,
-            message: 'Thiếu token'
+            message: userFind.message
           }));
-        case 4:
-          userToken = (0, _JsonWebToken.verifyToken)(token);
-          _context5.next = 7;
+        case 7:
+          _token5 = (0, _JsonWebToken.createToken)(userFind.body.toObject(), '1h');
+          _UserService["default"].sendMailChangePassword(email, _token5);
+          return _context5.abrupt("return", res.json({
+            status: true,
+            body: null,
+            message: 'Kiểm tra email để lấy lại mật khẩu'
+          }));
+        case 12:
+          _context5.prev = 12;
+          _context5.t0 = _context5["catch"](0);
+          next(_context5.t0);
+        case 15:
+        case "end":
+          return _context5.stop();
+      }
+    }, _callee5, null, [[0, 12]]);
+  }));
+  return function sendMailChangePassword(_x13, _x14, _x15) {
+    return _ref5.apply(this, arguments);
+  };
+}();
+var verifyEmail = /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res, next) {
+    var userToken, userDb, newToken, user;
+    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+      while (1) switch (_context6.prev = _context6.next) {
+        case 0:
+          _context6.prev = 0;
+          userToken = req.user;
+          _context6.next = 4;
           return _User["default"].findOne({
             _id: userToken._id
           });
-        case 7:
-          userDb = _context5.sent;
+        case 4:
+          userDb = _context6.sent;
           newToken = (0, _JsonWebToken.createToken)(userDb.toObject());
           user = {
             email: userDb.email,
@@ -332,10 +366,10 @@ var verifyEmail = /*#__PURE__*/function () {
             avatar: userDb.avatar
           };
           if (!(userDb.status === _UserStatusEnum["default"].CONFIRMED)) {
-            _context5.next = 12;
+            _context6.next = 9;
             break;
           }
-          return _context5.abrupt("return", res.status(200).json({
+          return _context6.abrupt("return", res.status(200).json({
             status: true,
             body: {
               user: user,
@@ -343,12 +377,12 @@ var verifyEmail = /*#__PURE__*/function () {
             },
             message: 'Tài khoản đã được kích hoạt'
           }));
-        case 12:
+        case 9:
           userDb.status = _UserStatusEnum["default"].CONFIRMED;
-          _context5.next = 15;
+          _context6.next = 12;
           return userDb.save();
-        case 15:
-          return _context5.abrupt("return", res.status(200).json({
+        case 12:
+          return _context6.abrupt("return", res.status(200).json({
             status: true,
             body: {
               user: user,
@@ -356,141 +390,86 @@ var verifyEmail = /*#__PURE__*/function () {
             },
             message: 'Kích hoạt tài khoản thành công'
           }));
-        case 18:
-          _context5.prev = 18;
-          _context5.t0 = _context5["catch"](0);
-          if (!(_context5.t0.message == 'jwt expired')) {
-            _context5.next = 22;
-            break;
-          }
-          return _context5.abrupt("return", res.status(401).json({
-            status: false,
-            body: null,
-            message: 'Token đã hết hạn'
-          }));
-        case 22:
-          next(_context5.t0);
-        case 23:
-        case "end":
-          return _context5.stop();
-      }
-    }, _callee5, null, [[0, 18]]);
-  }));
-  return function verifyEmail(_x13, _x14, _x15) {
-    return _ref5.apply(this, arguments);
-  };
-}();
-var deleteAccount = /*#__PURE__*/function () {
-  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res, next) {
-    var token, userToken, userDb;
-    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-      while (1) switch (_context6.prev = _context6.next) {
-        case 0:
-          _context6.prev = 0;
-          token = req.query.token;
-          if (token) {
-            _context6.next = 4;
-            break;
-          }
-          return _context6.abrupt("return", res.status(400).json({
-            status: false,
-            body: null,
-            message: 'Thiếu token'
-          }));
-        case 4:
-          userToken = (0, _JsonWebToken.verifyToken)(token);
-          _context6.next = 7;
-          return _User["default"].findOne({
-            _id: userToken._id
-          });
-        case 7:
-          userDb = _context6.sent;
-          if (userDb) {
-            _context6.next = 10;
-            break;
-          }
-          return _context6.abrupt("return", res.status(400).json({
-            status: false,
-            body: null,
-            message: 'Tài khoản không tồn tại'
-          }));
-        case 10:
-          _context6.next = 12;
-          return _User["default"].deleteOne({
-            _id: userToken._id
-          });
-        case 12:
-          return _context6.abrupt("return", res.status(200).json({
-            status: true,
-            body: null,
-            message: 'Xóa tài khoản thành công'
-          }));
         case 15:
           _context6.prev = 15;
           _context6.t0 = _context6["catch"](0);
-          if (!(_context6.t0.message == 'jwt expired')) {
-            _context6.next = 19;
-            break;
-          }
-          return _context6.abrupt("return", res.status(401).json({
-            status: false,
-            body: null,
-            message: 'Token đã hết hạn'
-          }));
-        case 19:
           next(_context6.t0);
-        case 20:
+        case 18:
         case "end":
           return _context6.stop();
       }
     }, _callee6, null, [[0, 15]]);
   }));
-  return function deleteAccount(_x16, _x17, _x18) {
+  return function verifyEmail(_x16, _x17, _x18) {
     return _ref6.apply(this, arguments);
   };
 }();
-var sendMailChangePassword = /*#__PURE__*/function () {
+var deleteAccount = /*#__PURE__*/function () {
   var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res, next) {
-    var email, userFind, token;
+    var _token6, userToken, userDb;
     return _regeneratorRuntime().wrap(function _callee7$(_context7) {
       while (1) switch (_context7.prev = _context7.next) {
         case 0:
           _context7.prev = 0;
-          email = req.body.email;
-          _context7.next = 4;
-          return _UserService["default"].findUser({
-            email: email
-          });
-        case 4:
-          userFind = _context7.sent;
-          if (userFind.status) {
-            _context7.next = 7;
+          _token6 = req.query.token;
+          if (_token6) {
+            _context7.next = 4;
             break;
           }
           return _context7.abrupt("return", res.status(400).json({
             status: false,
             body: null,
-            message: userFind.message
+            message: 'Thiếu token'
           }));
+        case 4:
+          userToken = (0, _JsonWebToken.verifyToken)(_token6);
+          _context7.next = 7;
+          return _User["default"].findOne({
+            _id: userToken._id
+          });
         case 7:
-          token = (0, _JsonWebToken.createToken)(userFind.body.toObject(), '1h');
-          _UserService["default"].sendMailChangePassword(email, token);
-          return _context7.abrupt("return", res.json({
+          userDb = _context7.sent;
+          if (userDb) {
+            _context7.next = 10;
+            break;
+          }
+          return _context7.abrupt("return", res.status(400).json({
+            status: false,
+            body: null,
+            message: 'Tài khoản không tồn tại'
+          }));
+        case 10:
+          _context7.next = 12;
+          return _User["default"].deleteOne({
+            _id: userToken._id
+          });
+        case 12:
+          return _context7.abrupt("return", res.status(200).json({
             status: true,
             body: null,
-            message: 'Kiểm tra email để lấy lại mật khẩu'
+            message: 'Xóa tài khoản thành công'
           }));
-        case 12:
-          _context7.prev = 12;
-          _context7.t0 = _context7["catch"](0);
-          next(_context7.t0);
         case 15:
+          _context7.prev = 15;
+          _context7.t0 = _context7["catch"](0);
+          if (!(_context7.t0.message == 'jwt expired')) {
+            _context7.next = 19;
+            break;
+          }
+          return _context7.abrupt("return", res.status(401).json({
+            status: false,
+            body: null,
+            message: 'Token đã hết hạn'
+          }));
+        case 19:
+          next(_context7.t0);
+        case 20:
         case "end":
           return _context7.stop();
       }
-    }, _callee7, null, [[0, 12]]);
+    }, _callee7, null, [[0, 15]]);
   }));
-  return function sendMailChangePassword(_x19, _x20, _x21) {
+  return function deleteAccount(_x19, _x20, _x21) {
     return _ref7.apply(this, arguments);
   };
 }();

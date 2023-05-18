@@ -189,12 +189,31 @@ const sendMailActive = async (req, res, next) => {
   }
 }
 
+const sendMailChangePassword = async (req, res, next) => {
+  try {
+    const { email } = req.body
+
+    const userFind = await userService.findUser({ email })
+    if (!userFind.status) {
+      return res.status(400).json({ status: false, body: null, message: userFind.message })
+    }
+
+    const token = createToken(userFind.body.toObject(), '1h')
+    userService.sendMailChangePassword(email, token)
+
+    return res.json({
+      status: true,
+      body: null,
+      message: 'Kiểm tra email để lấy lại mật khẩu',
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 const verifyEmail = async (req, res, next) => {
   try {
-    const token = req.query.token
-
-    if (!token) return res.status(400).json({ status: false, body: null, message: 'Thiếu token' })
-    const userToken = verifyToken(token)
+    const userToken = req.user
 
     const userDb = await User.findOne({ _id: userToken._id })
 
@@ -224,9 +243,6 @@ const verifyEmail = async (req, res, next) => {
       message: 'Kích hoạt tài khoản thành công',
     })
   } catch (error) {
-    if (error.message == 'jwt expired') {
-      return res.status(401).json({status: false, body: null, message: 'Token đã hết hạn'})
-    }
     next(error)
   }
 }
@@ -253,28 +269,6 @@ const deleteAccount = async (req, res, next) => {
     if (error.message == 'jwt expired') {
       return res.status(401).json({status: false, body: null, message: 'Token đã hết hạn'})
     }
-    next(error)
-  }
-}
-
-const sendMailChangePassword = async (req, res, next) => {
-  try {
-    const { email } = req.body
-
-    const userFind = await userService.findUser({ email })
-    if (!userFind.status) {
-      return res.status(400).json({ status: false, body: null, message: userFind.message })
-    }
-
-    const token = createToken(userFind.body.toObject(), '1h')
-    userService.sendMailChangePassword(email, token)
-
-    return res.json({
-      status: true,
-      body: null,
-      message: 'Kiểm tra email để lấy lại mật khẩu',
-    })
-  } catch (error) {
     next(error)
   }
 }

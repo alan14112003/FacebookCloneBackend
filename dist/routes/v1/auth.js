@@ -32,7 +32,7 @@ router.route('/register').post((0, _ValidateRouteMiddleware.validateBody)(_Regis
 router.route('/redirect/google').get(_PassportStrategy["default"].authenticate('google', {
   scope: ['email', 'profile']
 }));
-router.route('/verify-email').get(_AuthController["default"].verifyEmail);
+router.route('/verify-email').get(_ValidateUserMiddleware.validateUser, _AuthController["default"].verifyEmail);
 router.route('/delete-account').get(_AuthController["default"].deleteAccount);
 var _default = router;
 exports["default"] = _default;
