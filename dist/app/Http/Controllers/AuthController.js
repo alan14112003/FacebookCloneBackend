@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 exports["default"] = void 0;
 var _Bcrypt = require("../../../config/Bcrypt");
 var _JsonWebToken = require("../../../config/JsonWebToken");
+var _RedirectUrlEnum = _interopRequireDefault(require("../../Enums/RedirectUrl/RedirectUrlEnum"));
 var _UserStatusEnum = _interopRequireDefault(require("../../Enums/Users/UserStatusEnum"));
 var _User = _interopRequireDefault(require("../../Models/User"));
 var _UserService = _interopRequireDefault(require("../../Services/UserService"));
@@ -28,7 +29,7 @@ var callbackGoogle = /*#__PURE__*/function () {
         case 0:
           _context.prev = 0;
           // định nghĩa url để chuyển hướng.
-          redirectResponseUrl = 'https://fbcloneharukinguyen.netlify.app/google-login'; // lấy ra dữ liệu được trả về từ đăng nhập bằng google
+          redirectResponseUrl = _RedirectUrlEnum["default"].GOOGLE_LOGIN; // lấy ra dữ liệu được trả về từ đăng nhập bằng google
           _req$user$profile = req.user.profile, given_name = _req$user$profile.given_name, family_name = _req$user$profile.family_name, email = _req$user$profile.email, picture = _req$user$profile.picture;
           _context.next = 5;
           return _User["default"].findWithDeleted({
@@ -256,25 +257,17 @@ var sendMailActive = /*#__PURE__*/function () {
           _yield$User$findWithD3 = _context4.sent;
           _yield$User$findWithD4 = _slicedToArray(_yield$User$findWithD3, 1);
           userDb = _yield$User$findWithD4[0];
-          if (userDb) {
+          if (_UserService["default"].checkUserExist(userDb).status) {
             _context4.next = 8;
             break;
           }
-          return _context4.abrupt("return", res.status(400).json({
-            status: false,
-            body: null,
-            message: 'Không tồn tại người dùng với thông tin đã cho'
-          }));
+          return _context4.abrupt("return", res.status(400).json(_UserService["default"].checkUserExist(userDb)));
         case 8:
-          if (!userDb.deleted) {
+          if (_UserService["default"].checkUserNotDeleted(userDb).status) {
             _context4.next = 10;
             break;
           }
-          return _context4.abrupt("return", res.status(400).json({
-            status: false,
-            body: null,
-            message: 'Người dùng đã bị khóa'
-          }));
+          return _context4.abrupt("return", res.status(400).json(_UserService["default"].checkUserNotDeleted(userDb)));
         case 10:
           if (!(userDb.status === _UserStatusEnum["default"].CONFIRMED)) {
             _context4.next = 12;
@@ -366,8 +359,18 @@ var verifyEmail = /*#__PURE__*/function () {
         case 18:
           _context5.prev = 18;
           _context5.t0 = _context5["catch"](0);
+          if (!(_context5.t0.message == 'jwt expired')) {
+            _context5.next = 22;
+            break;
+          }
+          return _context5.abrupt("return", res.status(401).json({
+            status: false,
+            body: null,
+            message: 'Token đã hết hạn'
+          }));
+        case 22:
           next(_context5.t0);
-        case 21:
+        case 23:
         case "end":
           return _context5.stop();
       }
@@ -425,8 +428,18 @@ var deleteAccount = /*#__PURE__*/function () {
         case 15:
           _context6.prev = 15;
           _context6.t0 = _context6["catch"](0);
+          if (!(_context6.t0.message == 'jwt expired')) {
+            _context6.next = 19;
+            break;
+          }
+          return _context6.abrupt("return", res.status(401).json({
+            status: false,
+            body: null,
+            message: 'Token đã hết hạn'
+          }));
+        case 19:
           next(_context6.t0);
-        case 18:
+        case 20:
         case "end":
           return _context6.stop();
       }

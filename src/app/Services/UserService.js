@@ -3,37 +3,106 @@ import { hashPass } from '../../config/Bcrypt'
 import UserStatusEnum from '../Enums/Users/UserStatusEnum'
 import User from '../Models/User'
 import sendMail from '../../config/SendMail'
+import RedirectUrlEnum from '../Enums/RedirectUrl/RedirectUrlEnum'
 
 dotenv.config()
+
+const checkUserExist = (user) => {
+  if (!user) {
+    return {
+      status: false,
+      body: null,
+      message: 'Không tồn tại người dùng với thông tin đã cho',
+    }
+  }
+  return {
+    status: true,
+    body: null,
+    message: null,
+  }
+}
+
+const checkUserNotExist = (user, message = 'người dùng đã tồn tại') => {
+  if (user) {
+    return {
+      status: false,
+      body: null,
+      message: message,
+    }
+  }
+  return {
+    status: true,
+    body: null,
+    message: null,
+  }
+}
+
+const checkUserNotDeleted = (user) => {
+  if (user.deleted) {
+    return {
+      status: false,
+      body: null,
+      message: 'Người dùng đã bị khóa',
+    }
+  }
+  return {
+    status: true,
+    body: null,
+    message: null,
+  }
+}
+
+const checkUserConfirm = (user) => {
+  if (user.status === UserStatusEnum.UNCONFIRMED) {
+    return {
+      status: false,
+      body: null,
+      message: 'Người dùng chưa xác nhận email',
+    }
+  }
+  return {
+    status: true,
+    body: null,
+    message: null,
+  }
+}
+
+const checkUserUnConfirm = (user) => {
+  if (user.status === UserStatusEnum.CONFIRMED) {
+    return {
+      status: false,
+      body: null,
+      message: 'Người dùng đã xác nhận email',
+    }
+  }
+  return {
+    status: true,
+    body: null,
+    message: null,
+  }
+}
 
 const createUser = async (userField = {}) => {
   try {
     const [userDb] = await User.findWithDeleted({ email: userField.email })
-    if (userDb) {
-      if (userDb.deleted) {
-        return {
-          status: false,
-          body: null,
-          message: 'Người dùng đã bị khóa',
-        }
-      }
+    if (checkUserNotExist(userDb).status) {
+      userField.password = hashPass(userField.password)
+
+      const user = new User(userField)
+      await user.save()
+
       return {
-        status: false,
-        body: null,
-        message: 'Email đã tồn tại',
+        status: true,
+        body: user,
+        message: null,
       }
     }
 
-    userField.password = hashPass(userField.password)
-
-    const user = new User(userField)
-    await user.save()
-
-    return {
-      status: true,
-      body: user,
-      message: null,
+    if (!checkUserNotDeleted(userDb).status) {
+      return checkUserNotDeleted(userDb)
     }
+
+    return checkUserNotExist(userDb, 'Email đã tồn tại')
   } catch (error) {
     throw new Error(error)
   }
@@ -43,28 +112,16 @@ const findUser = async (userField = {}) => {
   try {
     const [user] = await User.findWithDeleted(userField)
 
-    if (!user) {
-      return {
-        status: false,
-        body: null,
-        message: 'Không tồn tại người dùng với thông tin đã cho',
-      }
+    if (!checkUserExist(user).status) {
+      return checkUserExist(user)
     }
 
-    if (user.deleted) {
-      return {
-        status: false,
-        body: null,
-        message: 'Người dùng đã bị khóa',
-      }
+    if (!checkUserNotDeleted(user).status) {
+      return checkUserNotDeleted(user)
     }
 
-    if (user.status === UserStatusEnum.UNCONFIRMED) {
-      return {
-        status: false,
-        body: null,
-        message: 'Người dùng chưa xác nhận email',
-      }
+    if (!checkUserConfirm(user).status) {
+      return checkUserConfirm(user)
     }
 
     return {
@@ -78,7 +135,6 @@ const findUser = async (userField = {}) => {
 }
 
 const sendMailActive = (email, token) => {
-  const urlRedirect = 'https://fbcloneharukinguyen.netlify.app/verify-email'
   const html = `
       <div class="container" style="background-color: #fff;
             border-radius: 5px;
@@ -104,7 +160,7 @@ const sendMailActive = (email, token) => {
           border-radius: 5px;
           cursor: pointer;
           text-decoration: none"
-          href="${urlRedirect}?token=${token}"
+          href="${RedirectUrlEnum.VERYFY_EMAIL}?token=${token}"
         >
           Kích hoạt tài khoản
         </a>
@@ -113,9 +169,7 @@ const sendMailActive = (email, token) => {
   sendMail(email, 'Kích hoạt tài khoản', html)
 }
 
-
 const sendMailChangePassword = (email, token) => {
-  const urlRedirect = 'https://fbcloneharukinguyen.netlify.app/change-password'
   const html = `
       <div class="container" style="background-color: #fff;
             border-radius: 5px;
@@ -141,7 +195,7 @@ const sendMailChangePassword = (email, token) => {
           border-radius: 5px;
           cursor: pointer;
           text-decoration: none"
-          href="${urlRedirect}?token=${token}"
+          href="${RedirectUrlEnum.CHANGE_PASSWORD}?token=${token}"
         >
           Lấy lại mật khẩu
         </a>
@@ -186,9 +240,12 @@ const sendMailDelete = (email, token) => {
 }
 
 export default {
+  checkUserExist,
+  checkUserNotDeleted,
+  checkUserUnConfirm,
   createUser,
   findUser,
   sendMailActive,
   sendMailDelete,
-  sendMailChangePassword
+  sendMailChangePassword,
 }

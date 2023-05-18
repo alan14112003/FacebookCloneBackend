@@ -1,5 +1,6 @@
 import { comparePass, hashPass } from '../../../config/Bcrypt'
 import { createToken, verifyToken } from '../../../config/JsonWebToken'
+import RedirectUrlEnum from '../../Enums/RedirectUrl/RedirectUrlEnum'
 import UserStatusEnum from '../../Enums/Users/UserStatusEnum'
 import User from '../../Models/User'
 import userService from '../../Services/UserService'
@@ -7,7 +8,7 @@ import userService from '../../Services/UserService'
 const callbackGoogle = async (req, res, next) => {
   try {
     // định nghĩa url để chuyển hướng.
-    const redirectResponseUrl = 'https://fbcloneharukinguyen.netlify.app/google-login'
+    const redirectResponseUrl = RedirectUrlEnum.GOOGLE_LOGIN
 
     // lấy ra dữ liệu được trả về từ đăng nhập bằng google
     const { given_name, family_name, email, picture } = req.user.profile
@@ -159,20 +160,12 @@ const sendMailActive = async (req, res, next) => {
   try {
     const [userDb] = await User.findWithDeleted(req.body)
 
-    if (!userDb) {
-      return res.status(400).json({
-        status: false,
-        body: null,
-        message: 'Không tồn tại người dùng với thông tin đã cho',
-      })
+    if (!userService.checkUserExist(userDb).status) {
+      return res.status(400).json(userService.checkUserExist(userDb))
     }
 
-    if (userDb.deleted) {
-      return res.status(400).json({
-        status: false,
-        body: null,
-        message: 'Người dùng đã bị khóa',
-      })
+    if (!userService.checkUserNotDeleted(userDb).status) {
+      return res.status(400).json(userService.checkUserNotDeleted(userDb))
     }
 
     if (userDb.status === UserStatusEnum.CONFIRMED) {
@@ -231,6 +224,9 @@ const verifyEmail = async (req, res, next) => {
       message: 'Kích hoạt tài khoản thành công',
     })
   } catch (error) {
+    if (error.message == 'jwt expired') {
+      return res.status(401).json({status: false, body: null, message: 'Token đã hết hạn'})
+    }
     next(error)
   }
 }
@@ -254,6 +250,9 @@ const deleteAccount = async (req, res, next) => {
       message: 'Xóa tài khoản thành công',
     })
   } catch (error) {
+    if (error.message == 'jwt expired') {
+      return res.status(401).json({status: false, body: null, message: 'Token đã hết hạn'})
+    }
     next(error)
   }
 }
