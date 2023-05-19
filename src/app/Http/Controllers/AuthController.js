@@ -213,8 +213,10 @@ const sendMailChangePassword = async (req, res, next) => {
 
 const verifyEmail = async (req, res, next) => {
   try {
-    const userToken = req.user
+    const token = req.query.token
 
+    if (!token) return res.status(400).json({ status: false, body: null, message: 'Thiếu token' })
+    const userToken = verifyToken(token)
     const userDb = await User.findOne({ _id: userToken._id })
 
     const newToken = createToken(userDb.toObject())
@@ -243,6 +245,9 @@ const verifyEmail = async (req, res, next) => {
       message: 'Kích hoạt tài khoản thành công',
     })
   } catch (error) {
+    if (error.message == 'jwt expired') {
+      return res.status(401).json({status: false, body: null, message: 'Token đã hết hạn'})
+    }
     next(error)
   }
 }

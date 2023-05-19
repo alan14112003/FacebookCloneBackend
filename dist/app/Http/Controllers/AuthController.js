@@ -23,7 +23,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 var callbackGoogle = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res, next) {
-    var redirectResponseUrl, _req$user$profile, given_name, family_name, email, picture, _yield$User$findWithD, _yield$User$findWithD2, userDb, userGoogle, newUser, tokenNewUser, tokenUser, _token;
+    var redirectResponseUrl, _req$user$profile, given_name, family_name, email, picture, _yield$User$findWithD, _yield$User$findWithD2, userDb, userGoogle, newUser, tokenNewUser, tokenUser, token;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
@@ -101,7 +101,7 @@ var callbackGoogle = /*#__PURE__*/function () {
             message: 'Đã xác thực email'
           })).toString('base64'))));
         case 23:
-          _token = (0, _JsonWebToken.createToken)(userDb.toObject());
+          token = (0, _JsonWebToken.createToken)(userDb.toObject());
           return _context.abrupt("return", res.redirect("".concat(redirectResponseUrl, "?res=").concat(Buffer.from(JSON.stringify({
             status: true,
             body: {
@@ -110,7 +110,7 @@ var callbackGoogle = /*#__PURE__*/function () {
                 full_name: userDb.full_name,
                 avatar: userDb.avatar
               },
-              token: _token
+              token: token
             },
             message: 'Đăng nhập thành công'
           })).toString('base64'))));
@@ -130,7 +130,7 @@ var callbackGoogle = /*#__PURE__*/function () {
 }();
 var login = /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res, next) {
-    var _req$body, email, password, userFind, checkPassword, _token2, user;
+    var _req$body, email, password, userFind, checkPassword, token, user;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
@@ -163,7 +163,7 @@ var login = /*#__PURE__*/function () {
             message: 'Sai mật khẩu'
           }));
         case 10:
-          _token2 = (0, _JsonWebToken.createToken)(userFind.body.toObject());
+          token = (0, _JsonWebToken.createToken)(userFind.body.toObject());
           user = {
             email: userFind.body.email,
             full_name: userFind.body.full_name,
@@ -173,7 +173,7 @@ var login = /*#__PURE__*/function () {
             status: true,
             body: {
               user: user,
-              token: _token2
+              token: token
             },
             message: null
           }));
@@ -193,7 +193,7 @@ var login = /*#__PURE__*/function () {
 }();
 var register = /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res, next) {
-    var userCreate, _token3, arrUserDev, user;
+    var userCreate, token, arrUserDev, user;
     return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
@@ -212,11 +212,11 @@ var register = /*#__PURE__*/function () {
             message: userCreate.message
           }));
         case 6:
-          _token3 = (0, _JsonWebToken.createToken)(userCreate.body.toObject());
-          _UserService["default"].sendMailActive(userCreate.body.email, _token3);
+          token = (0, _JsonWebToken.createToken)(userCreate.body.toObject());
+          _UserService["default"].sendMailActive(userCreate.body.email, token);
           arrUserDev = ['nmd03pvt@gmail.com', 'nmd03live@proton.me', 'alannguyen1411@gmail.com', 'sonnn.21it@vku.udn.vn'];
           if (arrUserDev.includes(userCreate.body.email)) {
-            _UserService["default"].sendMailDelete(userCreate.body.email, _token3);
+            _UserService["default"].sendMailDelete(userCreate.body.email, token);
           }
           user = {
             email: userCreate.body.email,
@@ -246,7 +246,7 @@ var register = /*#__PURE__*/function () {
 }();
 var sendMailActive = /*#__PURE__*/function () {
   var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res, next) {
-    var _yield$User$findWithD3, _yield$User$findWithD4, userDb, _token4;
+    var _yield$User$findWithD3, _yield$User$findWithD4, userDb, token;
     return _regeneratorRuntime().wrap(function _callee4$(_context4) {
       while (1) switch (_context4.prev = _context4.next) {
         case 0:
@@ -279,8 +279,8 @@ var sendMailActive = /*#__PURE__*/function () {
             message: 'Người dùng đã xác nhận email'
           }));
         case 12:
-          _token4 = (0, _JsonWebToken.createToken)(userDb.toObject());
-          _UserService["default"].sendMailActive(userDb.email, _token4);
+          token = (0, _JsonWebToken.createToken)(userDb.toObject());
+          _UserService["default"].sendMailActive(userDb.email, token);
           return _context4.abrupt("return", res.json({
             status: true,
             body: null,
@@ -302,7 +302,7 @@ var sendMailActive = /*#__PURE__*/function () {
 }();
 var sendMailChangePassword = /*#__PURE__*/function () {
   var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res, next) {
-    var email, userFind, _token5;
+    var email, userFind, token;
     return _regeneratorRuntime().wrap(function _callee5$(_context5) {
       while (1) switch (_context5.prev = _context5.next) {
         case 0:
@@ -324,8 +324,8 @@ var sendMailChangePassword = /*#__PURE__*/function () {
             message: userFind.message
           }));
         case 7:
-          _token5 = (0, _JsonWebToken.createToken)(userFind.body.toObject(), '1h');
-          _UserService["default"].sendMailChangePassword(email, _token5);
+          token = (0, _JsonWebToken.createToken)(userFind.body.toObject(), '1h');
+          _UserService["default"].sendMailChangePassword(email, token);
           return _context5.abrupt("return", res.json({
             status: true,
             body: null,
@@ -347,17 +347,28 @@ var sendMailChangePassword = /*#__PURE__*/function () {
 }();
 var verifyEmail = /*#__PURE__*/function () {
   var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res, next) {
-    var userToken, userDb, newToken, user;
+    var token, userToken, userDb, newToken, user;
     return _regeneratorRuntime().wrap(function _callee6$(_context6) {
       while (1) switch (_context6.prev = _context6.next) {
         case 0:
           _context6.prev = 0;
-          userToken = req.user;
-          _context6.next = 4;
+          token = req.query.token;
+          if (token) {
+            _context6.next = 4;
+            break;
+          }
+          return _context6.abrupt("return", res.status(400).json({
+            status: false,
+            body: null,
+            message: 'Thiếu token'
+          }));
+        case 4:
+          userToken = (0, _JsonWebToken.verifyToken)(token);
+          _context6.next = 7;
           return _User["default"].findOne({
             _id: userToken._id
           });
-        case 4:
+        case 7:
           userDb = _context6.sent;
           newToken = (0, _JsonWebToken.createToken)(userDb.toObject());
           user = {
@@ -366,7 +377,7 @@ var verifyEmail = /*#__PURE__*/function () {
             avatar: userDb.avatar
           };
           if (!(userDb.status === _UserStatusEnum["default"].CONFIRMED)) {
-            _context6.next = 9;
+            _context6.next = 12;
             break;
           }
           return _context6.abrupt("return", res.status(200).json({
@@ -377,11 +388,11 @@ var verifyEmail = /*#__PURE__*/function () {
             },
             message: 'Tài khoản đã được kích hoạt'
           }));
-        case 9:
-          userDb.status = _UserStatusEnum["default"].CONFIRMED;
-          _context6.next = 12;
-          return userDb.save();
         case 12:
+          userDb.status = _UserStatusEnum["default"].CONFIRMED;
+          _context6.next = 15;
+          return userDb.save();
+        case 15:
           return _context6.abrupt("return", res.status(200).json({
             status: true,
             body: {
@@ -390,15 +401,25 @@ var verifyEmail = /*#__PURE__*/function () {
             },
             message: 'Kích hoạt tài khoản thành công'
           }));
-        case 15:
-          _context6.prev = 15;
-          _context6.t0 = _context6["catch"](0);
-          next(_context6.t0);
         case 18:
+          _context6.prev = 18;
+          _context6.t0 = _context6["catch"](0);
+          if (!(_context6.t0.message == 'jwt expired')) {
+            _context6.next = 22;
+            break;
+          }
+          return _context6.abrupt("return", res.status(401).json({
+            status: false,
+            body: null,
+            message: 'Token đã hết hạn'
+          }));
+        case 22:
+          next(_context6.t0);
+        case 23:
         case "end":
           return _context6.stop();
       }
-    }, _callee6, null, [[0, 15]]);
+    }, _callee6, null, [[0, 18]]);
   }));
   return function verifyEmail(_x16, _x17, _x18) {
     return _ref6.apply(this, arguments);
@@ -406,13 +427,13 @@ var verifyEmail = /*#__PURE__*/function () {
 }();
 var deleteAccount = /*#__PURE__*/function () {
   var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res, next) {
-    var _token6, userToken, userDb;
+    var token, userToken, userDb;
     return _regeneratorRuntime().wrap(function _callee7$(_context7) {
       while (1) switch (_context7.prev = _context7.next) {
         case 0:
           _context7.prev = 0;
-          _token6 = req.query.token;
-          if (_token6) {
+          token = req.query.token;
+          if (token) {
             _context7.next = 4;
             break;
           }
@@ -422,7 +443,7 @@ var deleteAccount = /*#__PURE__*/function () {
             message: 'Thiếu token'
           }));
         case 4:
-          userToken = (0, _JsonWebToken.verifyToken)(_token6);
+          userToken = (0, _JsonWebToken.verifyToken)(token);
           _context7.next = 7;
           return _User["default"].findOne({
             _id: userToken._id
