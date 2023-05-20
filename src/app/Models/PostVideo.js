@@ -11,4 +11,4 @@ const postVideoSchema = new mongoose.Schema({
   },
 })
 
-export default mongoose.model('PostVideo', postVideoSchema, 'post_videos')
+export default mongoose.model('PostVideo', postVideoSchema, 'post_video')

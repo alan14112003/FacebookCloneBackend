@@ -11,4 +11,4 @@ const postImageSchema = new mongoose.Schema({
   },
 })
 
-export default mongoose.model('PostImage', postImageSchema, 'post_images')
+export default mongoose.model('PostImage', postImageSchema, 'post_image')
