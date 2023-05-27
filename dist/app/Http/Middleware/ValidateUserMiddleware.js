@@ -28,20 +28,32 @@ var validateUser = /*#__PURE__*/function () {
             _context.next = 3;
             break;
           }
-          return _context.abrupt("return", res.sendStatus(401));
+          return _context.abrupt("return", res.status(401).json({
+            status: false,
+            body: null,
+            message: 'Un Authorization'
+          }));
         case 3:
           _req$headers$authoriz = req.headers.authorization.split(' '), _req$headers$authoriz2 = _slicedToArray(_req$headers$authoriz, 2), scheme = _req$headers$authoriz2[0], token = _req$headers$authoriz2[1];
           if (!(scheme !== 'Bearer')) {
             _context.next = 6;
             break;
           }
-          return _context.abrupt("return", res.sendStatus(401));
+          return _context.abrupt("return", res.status(401).json({
+            status: false,
+            body: null,
+            message: 'Un Authorization'
+          }));
         case 6:
           if (token) {
             _context.next = 8;
             break;
           }
-          return _context.abrupt("return", res.sendStatus(401));
+          return _context.abrupt("return", res.status(401).json({
+            status: false,
+            body: null,
+            message: 'Un Authorization'
+          }));
         case 8:
           userVerified = (0, _JsonWebToken.verifyToken)(token);
           _context.next = 11;
