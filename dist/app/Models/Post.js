@@ -17,6 +17,11 @@ var postSchema = new _mongoose["default"].Schema({
     type: 'ObjectId',
     ref: 'User'
   },
+  feeling_id: {
+    type: 'ObjectId',
+    ref: 'Feeling',
+    "default": null
+  },
   videos: [{
     type: 'ObjectId',
     ref: 'PostVideo'

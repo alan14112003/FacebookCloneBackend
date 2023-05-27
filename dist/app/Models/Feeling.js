@@ -6,15 +6,12 @@ Object.defineProperty(exports, "__esModule", {
 exports["default"] = void 0;
 var _mongoose = _interopRequireDefault(require("mongoose"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-var postImageSchema = new _mongoose["default"].Schema({
-  src: {
+var feelingSchema = new _mongoose["default"].Schema({
+  name: {
     type: String,
     require: require
   },
-  post_id: {
-    type: 'ObjectId',
-    ref: 'Post'
-  }
+  src: String
 });
-var _default = _mongoose["default"].model('PostImage', postImageSchema, 'post_image');
+var _default = _mongoose["default"].model('Feeling', feelingSchema);
 exports["default"] = _default;

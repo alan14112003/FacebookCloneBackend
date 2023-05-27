@@ -2,6 +2,7 @@ import express from 'express'
 import userRoutes from './user'
 import friendRoutes from './friend'
 import postRoutes from './post'
+import feelingRoutes from './feeling'
 import { validateUser } from '../../../app/Http/Middleware/ValidateUserMiddleware'
 
 // lấy ra bộ định tuyến
@@ -15,5 +16,8 @@ router.use('/friends', validateUser, friendRoutes)
 
 // routes post
 router.use('/posts', validateUser, postRoutes)
+
+// routes feeling
+router.use('/feelings', feelingRoutes)
 
 export default router

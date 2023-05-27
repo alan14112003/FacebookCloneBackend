@@ -16,5 +16,5 @@ var postVideoSchema = new _mongoose["default"].Schema({
     ref: 'Post'
   }
 });
-var _default = _mongoose["default"].model('PostVideo', postVideoSchema, 'post_videos');
+var _default = _mongoose["default"].model('PostVideo', postVideoSchema, 'post_video');
 exports["default"] = _default;

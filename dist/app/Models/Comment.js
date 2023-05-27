@@ -28,6 +28,11 @@ var commentSchema = new _mongoose["default"].Schema({
     type: 'ObjectId',
     ref: 'CommentReaction'
   }]
+}, {
+  timestamps: {
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
+  }
 });
 var _default = _mongoose["default"].model('Comment', commentSchema);
 exports["default"] = _default;
