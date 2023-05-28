@@ -3,6 +3,7 @@ import userRoutes from './user'
 import friendRoutes from './friend'
 import postRoutes from './post'
 import feelingRoutes from './feeling'
+import reactionRoutes from './reaction'
 import { validateUser } from '../../../app/Http/Middleware/ValidateUserMiddleware'
 
 // lấy ra bộ định tuyến
@@ -19,5 +20,8 @@ router.use('/posts', validateUser, postRoutes)
 
 // routes feeling
 router.use('/feelings', feelingRoutes)
+
+// routes reaction
+router.use('/reactions', reactionRoutes)
 
 export default router
